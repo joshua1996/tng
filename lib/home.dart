@@ -344,7 +344,7 @@ class HomeScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 const Text(
-                                  'RM 0.06',
+                                  'RM 29,559.06',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -406,7 +406,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        width: 16,
+                        width: 24,
                       ),
                       const Row(
                         children: [
@@ -524,6 +524,7 @@ class HomeScreen extends StatelessWidget {
               child: Image.asset('assets/images/banner.jpg'),
             ),
             GridView.count(
+              padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               crossAxisCount: 4,
