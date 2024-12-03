@@ -10,16 +10,12 @@ dependencies:
   flutter:
     sdk: flutter
   badges:
-  google_fonts:
-  modal_bottom_sheet: ^3.0.0-pre
   flutter_launcher_icons:
-  flutter_statusbarcolor_ns:
-  status_bar_control:
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
