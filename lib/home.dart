@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tng/merchant_page.dart';
 import 'package:tng/models/shortcut.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:tng/payment_page.dart';
+import 'package:tng/scan_page.dart';
+import 'package:tng/transfer_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -58,6 +62,240 @@ class HomeScreen extends StatelessWidget {
       ),
     ];
 
+    void showBalance() {
+      showModalBottomSheet<void>(
+        context: context,
+        // showDragHandle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(16.0),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        builder: (BuildContext context) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              height: 364,
+              child: Column(
+                children: [
+                  Container(
+                    height: 4,
+                    width: 32,
+                    decoration: BoxDecoration(
+                      color: const Color(0xffe8e8e8),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '可用余额',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    children: [
+                      const Text(
+                        'RM 29,559.06',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Image.asset(
+                        'assets/images/wallet_safe_white.jpg',
+                        width: 20,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/go_plus.jpg',
+                        height: 24,
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      const Text(
+                        'GO+ 余额',
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    children: [
+                      SizedBox(
+                        width: 24 + 16,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'RM 9559.06',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'RM 0.88',
+                            style: TextStyle(
+                              color: Color(0xff69b475),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.remove_red_eye_outlined,
+                        color: Color(0xff005abe),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Divider(
+                    thickness: 0.5,
+                    color: Color(
+                      0xffb6b6b6,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/ewallet.jpg',
+                        height: 24,
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      const Text(
+                        '电子钱包余额',
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    children: [
+                      SizedBox(
+                        width: 24 + 16,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'RM 20,000.00',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.remove_red_eye_outlined,
+                        color: Color(0xff005abe),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 12,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Color(0xffe3f6fe),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                            children: [
+                              TextSpan(text: '您可用转账至 '),
+                              TextSpan(
+                                text: 'RM 29,559.06',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Color(0xff2463f3),
+                          size: 26,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '当电子钱包余额不足时，GO+余额可被用来支付所有交易。',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const TextSpan(
+                          text: '了解更多',
+                          style: TextStyle(
+                            color: Color(0xff436de9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -65,7 +303,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               height: MediaQuery.of(context).viewPadding.top,
               color: const Color(
-                0xff1f5bc1,
+                0xff005abe,
               ),
             ),
             Container(
@@ -74,321 +312,102 @@ class HomeScreen extends StatelessWidget {
                 vertical: 8,
               ),
               color: const Color(
-                0xff1f5bc1,
+                0xff005abe,
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            '可用余额',
-                            style: TextStyle(
-                              color: Color(
-                                0xffb3cdf3,
-                              ),
-                              fontWeight: FontWeight.bold,
+                          Image(
+                            image:
+                                AssetImage('assets/images/country_select.png'),
+                            width: MediaQuery.of(context).size.width * 0.7,
+                          ),
+                          badges.Badge(
+                            position: badges.BadgePosition.custom(
+                              top: 0,
+                              end: 0,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet<void>(
-                                context: context,
-                                // showDragHandle: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(16.0),
-                                  ),
-                                ),
-                                backgroundColor: Colors.white,
-                                builder: (BuildContext context) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: SizedBox(
-                                      height: 364,
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            height: 4,
-                                            width: 32,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xffe8e8e8),
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                            ),
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              '可用余额',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Row(
-                                            children: [
-                                              const Text(
-                                                'RM 29,559.06',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Image.asset(
-                                                'assets/images/wallet_safe_white.jpg',
-                                                width: 20,
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/go_plus.jpg',
-                                                height: 24,
-                                              ),
-                                              const SizedBox(
-                                                width: 16,
-                                              ),
-                                              const Text(
-                                                'GO+ 余额',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 24 + 16,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Text(
-                                                    'RM 9559.06',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Text(
-                                                    'RM 0.88',
-                                                    style: TextStyle(
-                                                      color: Color(0xff69b475),
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Spacer(),
-                                              Icon(
-                                                Icons.remove_red_eye_outlined,
-                                                color: Color(0xff1f5bc1),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          const Divider(
-                                            thickness: 0.5,
-                                            color: Color(
-                                              0xffb6b6b6,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/ewallet.jpg',
-                                                height: 24,
-                                              ),
-                                              const SizedBox(
-                                                width: 16,
-                                              ),
-                                              const Text(
-                                                '电子钱包余额',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 24 + 16,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Text(
-                                                    'RM 20,000.00',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Spacer(),
-                                              Icon(
-                                                Icons.remove_red_eye_outlined,
-                                                color: Color(0xff1f5bc1),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 12,
-                                            ),
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xffe3f6fe),
-                                            ),
-                                            child: const Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text.rich(
-                                                  TextSpan(
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                    ),
-                                                    children: [
-                                                      TextSpan(text: '您可用转账至 '),
-                                                      TextSpan(
-                                                        text: 'RM 29,559.06',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Icon(
-                                                  Icons.keyboard_arrow_right,
-                                                  color: Color(0xff2463f3),
-                                                  size: 26,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          Text.rich(
-                                            TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text:
-                                                      '当电子钱包余额不足时，GO+余额可被用来支付所有交易。',
-                                                  style: TextStyle(
-                                                    color: Colors.grey.shade600,
-                                                  ),
-                                                ),
-                                                const TextSpan(
-                                                  text: '了解更多',
-                                                  style: TextStyle(
-                                                    color: Color(0xff436de9),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                const Text(
-                                  'RM 29,559.06',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Image.asset(
-                                  'assets/images/walletsafe.jpg',
-                                  width: 20,
-                                ),
-                                const Icon(
-                                  Icons.keyboard_arrow_right,
-                                  color: Colors.white,
-                                ),
-                              ],
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffcdeffc),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: const Icon(
+                                Icons.person_outlined,
+                                color: Color(0xff2a62f6),
+                                size: 30,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      badges.Badge(
-                        position: badges.BadgePosition.custom(
-                          top: 0,
-                          end: 0,
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffcdeffc),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: const Icon(
-                            Icons.person_outlined,
-                            color: Color(0xff2a62f6),
-                            size: 30,
-                          ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showBalance();
+                        },
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/walletsafe.jpg',
+                              width: 20,
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            const Text(
+                              'RM 559.06',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 26,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const MerchantPage(),
+                                  ),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 12,
+                  Row(
+                    children: [
+                      Text(
+                        '查看余额详情',
+                        style: TextStyle(
+                          color: Color(0xff98b7ee),
+                          fontSize: 12,
+                        ),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_right,
+                        color: Color(0xff98b7ee),
+                        size: 17,
+                      ),
+                    ],
                   ),
                   Row(
                     children: [
@@ -415,18 +434,17 @@ class HomeScreen extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                           ),
                           Icon(
                             Icons.keyboard_arrow_right,
                             color: Colors.white,
+                            size: 17,
                           ),
                         ],
                       )
                     ],
-                  ),
-                  const SizedBox(
-                    height: 4,
                   ),
                 ],
               ),
@@ -436,7 +454,12 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Container(
                   height: 44,
-                  color: const Color(0xff1f5bc1),
+                  decoration: BoxDecoration(
+                      color: const Color(0xff005abe),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(16.0),
+                        bottomRight: Radius.circular(16.0),
+                      )),
                 ),
                 Positioned(
                   top: 0,
@@ -444,6 +467,7 @@ class HomeScreen extends StatelessWidget {
                   right: 0,
                   child: Card(
                     surfaceTintColor: Colors.white,
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -500,15 +524,6 @@ class HomeScreen extends StatelessWidget {
                       title: 'GO rewards',
                       subtitle: '',
                       badge: '1 个奖励',
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    SecondButton(
-                      image: 'eshop',
-                      title: 'eShop',
-                      subtitle: '获取优惠劵',
-                      badge: '',
                     ),
                   ],
                 ),
@@ -613,28 +628,38 @@ class MainButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 16,
-        ),
-        Image.asset(
-          'assets/images/$image.jpg',
-          width: 34,
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 12,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ScanPage(),
           ),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-      ],
+        );
+      },
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 16,
+          ),
+          Image.asset(
+            'assets/images/$image.jpg',
+            width: 34,
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -660,7 +685,7 @@ class SecondButton extends StatelessWidget {
           left: 8,
         ),
         decoration: BoxDecoration(
-          color: const Color(0xffecf2fe),
+          color: const Color(0xffedf1fd),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
