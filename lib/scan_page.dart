@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/payment_page.dart';
@@ -23,6 +24,23 @@ class _ScanPageState extends State<ScanPage> {
   Future<void> dispose() async {
     super.dispose();
     await controller.dispose();
+  }
+
+  Future<List<Map<String, dynamic>>> getMerchants() async {
+    final supabase = Supabase.instance.client;
+    List<Map<String, dynamic>> merchants =
+        await supabase.from('merchants').select().eq('qrcode', scannedCode);
+    if (merchants.isNotEmpty) {
+      Fluttertoast.showToast(
+        msg: "Valid",
+        fontSize: 12,
+        backgroundColor: Colors.grey,
+      );
+      return merchants;
+    }
+    merchants =
+        await supabase.from('merchants').select().eq('active', true).limit(1);
+    return merchants;
   }
 
   @override
@@ -55,7 +73,6 @@ class _ScanPageState extends State<ScanPage> {
         fit: StackFit.expand,
         children: [
           MobileScanner(
-            // fit: BoxFit.fill,
             controller: controller,
             scanWindow: scanWindow,
             errorBuilder: (context, error, child) {
@@ -65,12 +82,7 @@ class _ScanPageState extends State<ScanPage> {
               if (scannedCode.isEmpty) {
                 scannedCode = barcodes.barcodes.firstOrNull?.displayValue ?? '';
                 ShowDialog.loadingDialog(context);
-                final supabase = Supabase.instance.client;
-                final merchants = await supabase
-                    .from('merchants')
-                    .select()
-                    .eq('active', true)
-                    .limit(1);
+                final merchants = await getMerchants();
                 if (!context.mounted) return;
                 Navigator.pop(context);
                 if (merchants[0]['type'] == 'sme') {
@@ -90,7 +102,6 @@ class _ScanPageState extends State<ScanPage> {
                     ),
                   );
                 }
-
                 scannedCode = '';
               }
             },

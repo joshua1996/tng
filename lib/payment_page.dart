@@ -1,10 +1,10 @@
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/receipt_page.dart';
 import 'package:tng/show_dialog.dart';
-import 'package:tng/transfering_page.dart';
 
 class PaymentPage extends StatefulWidget {
   final Map<String, dynamic> merchant;
@@ -14,11 +14,42 @@ class PaymentPage extends StatefulWidget {
   State<PaymentPage> createState() => _PaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
   bool isKeyin = false;
   bool isPaymentProcessing = false;
   CurrencyTextFieldController controller = CurrencyTextFieldController(
       currencySymbol: '', decimalSymbol: '.', thousandSymbol: ',');
+  String merchantNameFromClipboard = '';
+
+  @override
+  void initState() {
+    super.initState();
+    copyFromClipboard();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      copyFromClipboard();
+    }
+  }
+
+  void copyFromClipboard() async {
+    if (widget.merchant['name'] != 'default') return;
+    ClipboardData? data = await Clipboard.getData('text/plain');
+    if (data == null) return;
+    if (merchantNameFromClipboard == data.text) return;
+    setState(() {
+      merchantNameFromClipboard = data.text ?? '';
+    });
+  }
 
   var maskFormatter = MaskTextInputFormatter(
       mask: '+# (###) ###-##-##',
@@ -28,11 +59,22 @@ class _PaymentPageState extends State<PaymentPage> {
   Future<void> saveTransaction() async {
     ShowDialog.loadingDialog(context);
     final supabase = Supabase.instance.client;
-    final List<Map<String, dynamic>> transactions =
-        await supabase.from('transactions').insert({
-      'merchant_id': widget.merchant['id'],
-      'amount': controller.text,
-    }).select('*, merchants(*)');
+    List<Map<String, dynamic>> transactions = [];
+    if (widget.merchant['name'] == 'default') {
+      final merchants = await supabase.from('merchants').insert({
+        'name': merchantNameFromClipboard,
+      }).select();
+      transactions = await supabase.from('transactions').insert({
+        'merchant_id': merchants[0]['id'],
+        'amount': controller.text,
+      }).select('*, merchants(*)');
+    } else {
+      transactions = await supabase.from('transactions').insert({
+        'merchant_id': widget.merchant['id'],
+        'amount': controller.text,
+      }).select('*, merchants(*)');
+    }
+
     if (!mounted) return;
     Navigator.pop(context);
     setState(() {
@@ -51,14 +93,6 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
       );
     });
-
-    // if (!mounted) return;
-    // Navigator.pop(context);
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => TransferingPage(),
-    //   ),
-    // );
   }
 
   @override
@@ -123,7 +157,9 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       Flexible(
                         child: Text(
-                          widget.merchant['name'],
+                          merchantNameFromClipboard.isEmpty
+                              ? widget.merchant['name']
+                              : merchantNameFromClipboard,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -230,7 +266,9 @@ class _PaymentPageState extends State<PaymentPage> {
                     height: 16,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24,),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                    ),
                     child: SizedBox(
                       width: double.infinity,
                       child: FilledButton(

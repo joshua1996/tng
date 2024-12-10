@@ -153,10 +153,11 @@ class _MerchantPageState extends State<MerchantPage> {
                               );
                             }).toList(),
                           ),
+                          Text(snapshot.data[index]['remark'] ?? ''),
                         ],
                       ),
                     ),
-                    const Spacer(),
+                    // const Spacer(),
                     Checkbox(
                       value: snapshot.data[index]['active'],
                       onChanged: (bool? newValue) async {

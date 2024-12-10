@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/merchant_page.dart';
 import 'package:tng/models/shortcut.dart';
 import 'package:badges/badges.dart' as badges;
@@ -328,21 +329,52 @@ class HomeScreen extends StatelessWidget {
                                 AssetImage('assets/images/country_select.png'),
                             width: MediaQuery.of(context).size.width * 0.7,
                           ),
-                          badges.Badge(
-                            position: badges.BadgePosition.custom(
-                              top: 0,
-                              end: 0,
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xffcdeffc),
-                                borderRadius: BorderRadius.circular(100),
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () async {
+                              final supabase = Supabase.instance.client;
+                              final merchants = await supabase
+                                  .from('merchants')
+                                  .select()
+                                  .eq('name', 'default')
+                                  .limit(1);
+                              if (!context.mounted) return;
+                              if (merchants[0]['type'] == 'sme') {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PaymentPage(
+                                      merchant:
+                                          merchants.isEmpty ? {} : merchants[0],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => TransferPage(
+                                      merchant:
+                                          merchants.isEmpty ? {} : merchants[0],
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: badges.Badge(
+                              position: badges.BadgePosition.custom(
+                                top: 0,
+                                end: 0,
                               ),
-                              child: const Icon(
-                                Icons.person_outlined,
-                                color: Color(0xff2a62f6),
-                                size: 30,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffcdeffc),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: const Icon(
+                                  Icons.person_outlined,
+                                  color: Color(0xff2a62f6),
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
