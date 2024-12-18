@@ -20,7 +20,8 @@ class _MerchantPageState extends State<MerchantPage> {
   }
 
   void getMerchants() {
-    merchantFuture = supabase.from('merchants').select();
+    // merchantFuture = supabase.from('merchants').select();
+    merchantFuture = supabase.rpc('fetch_merchants_sorted_by_recent_transaction');
   }
 
   @override
@@ -113,68 +114,83 @@ class _MerchantPageState extends State<MerchantPage> {
         future: merchantFuture, // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(
-                vertical: 16,
-                horizontal: 16,
-              ),
-              itemBuilder: (context, index) {
-                return Row(
+            return Column(
+              children: [
+                Row(
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+                    Expanded(child: TextField()),
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 16,
+                    ),
+                    itemBuilder: (context, index) {
+                      return Row(
                         children: [
-                          Flexible(child: Text(snapshot.data[index]['name'])),
-                          DropdownButton<String>(
-                            value: snapshot.data[index]['type'],
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            style: const TextStyle(color: Colors.deepPurple),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(child: Text(snapshot.data[index]['name'])),
+                                DropdownButton<String>(
+                                  value: snapshot.data[index]['type'],
+                                  icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+                                  style: const TextStyle(color: Colors.deepPurple),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  onChanged: (String? value) async {
+                                    setState(() {
+                                      snapshot.data[index]['type'] = value!;
+                                    });
+                                    await supabase
+                                        .from('merchants')
+                                        .update({'type': value}).eq(
+                                            'id', snapshot.data[index]['id']);
+                                  },
+                                  items: ['sme', 'p2p']
+                                      .map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                                Text(snapshot.data[index]['remark'] ?? ''),
+                              ],
                             ),
-                            onChanged: (String? value) async {
+                          ),
+                          // const Spacer(),
+                          Checkbox(
+                            value: snapshot.data[index]['active'],
+                            onChanged: (bool? newValue) async {
                               setState(() {
-                                snapshot.data[index]['type'] = value!;
+                                snapshot.data[index]['active'] = newValue;
                               });
                               await supabase
                                   .from('merchants')
-                                  .update({'type': value}).eq(
+                                  .update({'active': newValue}).eq(
                                       'id', snapshot.data[index]['id']);
                             },
-                            items: ['sme', 'p2p']
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
                           ),
-                          Text(snapshot.data[index]['remark'] ?? ''),
                         ],
-                      ),
-                    ),
-                    // const Spacer(),
-                    Checkbox(
-                      value: snapshot.data[index]['active'],
-                      onChanged: (bool? newValue) async {
-                        setState(() {
-                          snapshot.data[index]['active'] = newValue;
-                        });
-                        await supabase
-                            .from('merchants')
-                            .update({'active': newValue}).eq(
-                                'id', snapshot.data[index]['id']);
-                      },
-                    ),
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) => const Divider(),
-              itemCount: snapshot.data.length,
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(),
+                    itemCount: snapshot.data.length,
+                  ),
+                ),
+              ],
             );
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
