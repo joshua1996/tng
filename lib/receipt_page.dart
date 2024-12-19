@@ -222,7 +222,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                   ),
                   Expanded(
                     child: Text(
-                      '2024112010110000010000TNGOW3MY171353140408728',
+                      '${DateFormat('yyyyMMdd').format(DateTime.now())}10110000010000TNGOW3MY171353140408728',
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,

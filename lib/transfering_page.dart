@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tng/receipt_page.dart';
 
 class TransferingPage extends StatefulWidget {
   const TransferingPage({super.key});

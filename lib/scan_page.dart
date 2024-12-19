@@ -6,6 +6,7 @@ import 'package:tng/payment_page.dart';
 import 'package:tng/scanner_error_widget.dart';
 import 'package:tng/show_dialog.dart';
 import 'package:tng/transfer_page.dart';
+import 'package:vibration/vibration.dart';
 
 class ScanPage extends StatefulWidget {
   const ScanPage({super.key});
@@ -31,11 +32,12 @@ class _ScanPageState extends State<ScanPage> {
     List<Map<String, dynamic>> merchants =
         await supabase.from('merchants').select().eq('qrcode', scannedCode);
     if (merchants.isNotEmpty) {
-      Fluttertoast.showToast(
-        msg: "Valid",
-        fontSize: 12,
-        backgroundColor: Colors.grey,
-      );
+      // Fluttertoast.showToast(
+      //   msg: "Valid",
+      //   fontSize: 12,
+      //   backgroundColor: Colors.grey,
+      // );
+      Vibration.vibrate();
       return merchants;
     }
     merchants =
@@ -229,18 +231,7 @@ class ScannerOverlay extends CustomPainter {
       cutoutPath,
     );
 
-    final borderPaint = Paint()
-      // ..color = Colors.red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
 
-    final borderRect = RRect.fromRectAndCorners(
-      scanWindow,
-      topLeft: Radius.circular(borderRadius),
-      topRight: Radius.circular(borderRadius),
-      bottomLeft: Radius.circular(borderRadius),
-      bottomRight: Radius.circular(borderRadius),
-    );
 
     // First, draw the background,
     // with a cutout area that is a bit larger than the scan window.

@@ -12,16 +12,18 @@ class _MerchantPageState extends State<MerchantPage> {
   late Future merchantFuture;
   bool? value = false;
   final supabase = Supabase.instance.client;
+  final controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    getMerchants();
+    getMerchants('');
   }
 
-  void getMerchants() {
-    // merchantFuture = supabase.from('merchants').select();
-    merchantFuture = supabase.rpc('fetch_merchants_sorted_by_recent_transaction');
+  void getMerchants(String pName) {
+    merchantFuture =
+        supabase.rpc('fetch_merchants_sorted_by_recent_transaction', params: {'p_name': pName});
+        // .like('p_name', '%$pName%');
   }
 
   @override
@@ -93,7 +95,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                 });
                                 if (!context.mounted) return;
                                 setState(() {
-                                  getMerchants();
+                                  getMerchants(controller.text);
                                 });
                                 Navigator.pop(context);
                               },
@@ -111,19 +113,51 @@ class _MerchantPageState extends State<MerchantPage> {
         ],
       ),
       body: FutureBuilder(
-        future: merchantFuture, // a previously-obtained Future<String> or null
+        future: merchantFuture,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            default:
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+          }
           if (snapshot.hasData) {
             return Column(
               children: [
-                Row(
-                  children: [
-                    Expanded(child: TextField()),
-                    IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {},
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: controller,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Merchant Name',
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.clear),
+                              onPressed: () {
+                                setState(() {
+                                  controller.clear();
+                                  getMerchants('');
+                                });
+                              },
+                            )
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          setState(() {
+                            getMerchants(controller.text);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: ListView.separated(
@@ -139,12 +173,14 @@ class _MerchantPageState extends State<MerchantPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Flexible(child: Text(snapshot.data[index]['name'])),
+                                Flexible(
+                                    child: Text(snapshot.data[index]['name'])),
                                 DropdownButton<String>(
                                   value: snapshot.data[index]['type'],
                                   icon: const Icon(Icons.arrow_downward),
                                   elevation: 16,
-                                  style: const TextStyle(color: Colors.deepPurple),
+                                  style:
+                                      const TextStyle(color: Colors.deepPurple),
                                   underline: Container(
                                     height: 2,
                                     color: Colors.deepPurpleAccent,
@@ -159,7 +195,8 @@ class _MerchantPageState extends State<MerchantPage> {
                                             'id', snapshot.data[index]['id']);
                                   },
                                   items: ['sme', 'p2p']
-                                      .map<DropdownMenuItem<String>>((String value) {
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Text(value),
@@ -195,7 +232,7 @@ class _MerchantPageState extends State<MerchantPage> {
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
           } else {
-            return const CircularProgressIndicator();
+            return Center(child: const CircularProgressIndicator());
           }
         },
       ),
