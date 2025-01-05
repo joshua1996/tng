@@ -15,6 +15,7 @@ class _MerchantPageState extends State<MerchantPage> {
   final controller = TextEditingController();
   final PagingController<int, dynamic> _pagingController =
       PagingController(firstPageKey: 1);
+  String sortOrder = 'last_transaction';
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _MerchantPageState extends State<MerchantPage> {
         'p_name': controller.text,
         'page_number': pageKey,
         'limit_number': 20,
+        'sort_order': sortOrder,
       });
       final isLastPage = merchants.isEmpty;
       if (isLastPage) {
@@ -71,6 +73,14 @@ class _MerchantPageState extends State<MerchantPage> {
       appBar: AppBar(
         title: Text('Merchant'),
         actions: [
+          IconButton(
+            onPressed: () {
+              sortOrder =
+                  sortOrder == 'last_transaction' ? 'created_at' : 'last_transaction';
+              _pagingController.refresh();
+            },
+            icon: Icon(Icons.sort),
+          ),
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
@@ -127,6 +137,12 @@ class _MerchantPageState extends State<MerchantPage> {
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: () async {
+                                await supabase
+                                    .from('merchants')
+                                    .update({'active': false}).eq(
+                                  'active',
+                                  true,
+                                );
                                 await supabase.from('merchants').upsert({
                                   'name': controller.text,
                                   'type': merchantType,
@@ -232,15 +248,30 @@ class _MerchantPageState extends State<MerchantPage> {
                             ],
                           ),
                         ),
-                        // const Spacer(),
                         Checkbox(
                           value: item['active'],
                           onChanged: (bool? newValue) async {
                             setState(() {
+                              for (var i = 0;
+                                  i < _pagingController.itemList!.length;
+                                  i++) {
+                                _pagingController.itemList![i]['active'] =
+                                    false;
+                              }
                               item['active'] = newValue;
                             });
-                            await supabase.from('merchants').update(
-                                {'active': newValue}).eq('id', item['id']);
+                            await supabase
+                                .from('merchants')
+                                .update({'active': false}).eq(
+                              'active',
+                              true,
+                            );
+                            await supabase
+                                .from('merchants')
+                                .update({'active': newValue}).eq(
+                              'id',
+                              item['id'],
+                            );
                           },
                         ),
                       ],

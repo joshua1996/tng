@@ -1,5 +1,7 @@
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/receipt_page.dart';
 import 'package:tng/show_dialog.dart';
@@ -17,9 +19,33 @@ class _TransferPageState extends State<TransferPage> {
   CurrencyTextFieldController controller = CurrencyTextFieldController(
       currencySymbol: '', decimalSymbol: '.', thousandSymbol: ',');
   bool isPaymentProcessing = false;
+  final LocalAuthentication auth = LocalAuthentication();
+  bool authenticated = false;
+  Future<void> _authenticate() async {
+    try {
+      authenticated = await auth.authenticate(
+        localizedReason: 'Let OS determine authentication method',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+    } on PlatformException catch (e) {
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+  }
 
   Future<void> saveTransaction() async {
     ShowDialog.loadingDialog(context);
+    await _authenticate();
+    if (!authenticated) {
+      if (!mounted) return;
+      Navigator.pop(context);
+      return;
+    }
+
     final supabase = Supabase.instance.client;
     final List<Map<String, dynamic>> transactions =
         await supabase.from('transactions').insert({
