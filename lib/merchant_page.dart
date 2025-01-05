@@ -127,11 +127,11 @@ class _MerchantPageState extends State<MerchantPage> {
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: () async {
-                                await supabase.from('merchants').insert({
+                                await supabase.from('merchants').upsert({
                                   'name': controller.text,
                                   'type': merchantType,
                                   'active': true,
-                                });
+                                }, onConflict: 'name');
                                 if (!context.mounted) return;
                                 _pagingController.refresh();
                                 Navigator.pop(context);
@@ -385,7 +385,6 @@ class _MerchantPageState extends State<MerchantPage> {
     );
   }
 }
-
 
 class CustomFirstPageError extends StatelessWidget {
   const CustomFirstPageError({
