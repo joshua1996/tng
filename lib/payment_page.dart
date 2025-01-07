@@ -1,9 +1,10 @@
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tng/receipt_page.dart';
+import 'package:tng/payment_receipt_page.dart';
 import 'package:tng/show_dialog.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -20,6 +21,8 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
   CurrencyTextFieldController controller = CurrencyTextFieldController(
       currencySymbol: '', decimalSymbol: '.', thousandSymbol: ',');
   String merchantNameFromClipboard = '';
+  final LocalAuthentication auth = LocalAuthentication();
+  bool authenticated = false;
 
   @override
   void initState() {
@@ -42,7 +45,7 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
   }
 
   void copyFromClipboard() async {
-    if (widget.merchant['name'] != 'default') return;
+    if (widget.merchant['name'] != 'default sme') return;
     ClipboardData? data = await Clipboard.getData('text/plain');
     if (data == null) return;
     if (merchantNameFromClipboard == data.text) return;
@@ -51,16 +54,17 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
     });
   }
 
-  var maskFormatter = MaskTextInputFormatter(
-      mask: '+# (###) ###-##-##',
-      filter: {"#": RegExp(r'[0-9]')},
-      type: MaskAutoCompletionType.lazy);
-
   Future<void> saveTransaction() async {
     ShowDialog.loadingDialog(context);
+    await _authenticate();
+    if (!authenticated) {
+      if (!mounted) return;
+      Navigator.pop(context);
+      return;
+    }
     final supabase = Supabase.instance.client;
     List<Map<String, dynamic>> transactions = [];
-    if (widget.merchant['name'] == 'default') {
+    if (widget.merchant['name'] == 'default sme') {
       final merchants = await supabase.from('merchants').insert({
         'name': merchantNameFromClipboard,
       }).select();
@@ -77,6 +81,7 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
 
     if (!mounted) return;
     Navigator.pop(context);
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       isPaymentProcessing = true;
     });
@@ -87,12 +92,28 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
       if (!mounted) return;
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ReceiptPage(
+          builder: (context) => PaymentReceiptPage(
             transactions: transactions,
           ),
         ),
       );
     });
+  }
+
+  Future<void> _authenticate() async {
+    try {
+      authenticated = await auth.authenticate(
+        localizedReason: 'Let OS determine authentication method',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+    } on PlatformException catch (e) {
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:tng/models/shortcut.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:tng/payment_page.dart';
 import 'package:tng/scan_page.dart';
+import 'package:tng/transaction_history_page.dart';
 import 'package:tng/transfer_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,6 +13,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final supabase = Supabase.instance.client;
     List<ShortcutButton> shortcutButtons = [
       ShortcutButton(
         title: '收费站',
@@ -332,32 +334,36 @@ class HomeScreen extends StatelessWidget {
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () async {
-                              final supabase = Supabase.instance.client;
                               final merchants = await supabase
                                   .from('merchants')
                                   .select()
-                                  .eq('name', 'default')
+                                  .eq('name', 'default sme')
                                   .limit(1);
                               if (!context.mounted) return;
-                              if (merchants[0]['type'] == 'sme') {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PaymentPage(
-                                      merchant:
-                                          merchants.isEmpty ? {} : merchants[0],
-                                    ),
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => PaymentPage(
+                                    merchant:
+                                        merchants.isEmpty ? {} : merchants[0],
                                   ),
-                                );
-                              } else {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => TransferPage(
-                                      merchant:
-                                          merchants.isEmpty ? {} : merchants[0],
-                                    ),
+                                ),
+                              );
+                            },
+                            onLongPress: () async {
+                              final merchants = await supabase
+                                  .from('merchants')
+                                  .select()
+                                  .eq('name', 'default p2p')
+                                  .limit(1);
+                              if (!context.mounted) return;
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => TransferPage(
+                                    merchant:
+                                        merchants.isEmpty ? {} : merchants[0],
                                   ),
-                                );
-                              }
+                                ),
+                              );
                             },
                             child: badges.Badge(
                               position: badges.BadgePosition.custom(
@@ -459,22 +465,32 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(
                         width: 24,
                       ),
-                      const Row(
-                        children: [
-                          Text(
-                            '交易记录',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const TransactionHistoryPage(),
                             ),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_right,
-                            color: Colors.white,
-                            size: 17,
-                          ),
-                        ],
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            Text(
+                              '交易记录',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_right,
+                              color: Colors.white,
+                              size: 17,
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tng/receipt_page.dart';
+import 'package:tng/transfer_receipt_page.dart';
 import 'package:tng/show_dialog.dart';
 
 class TransferPage extends StatefulWidget {
@@ -14,13 +14,36 @@ class TransferPage extends StatefulWidget {
   State<TransferPage> createState() => _TransferPageState();
 }
 
-class _TransferPageState extends State<TransferPage> {
+class _TransferPageState extends State<TransferPage>
+    with WidgetsBindingObserver {
   bool isKeyin = false;
   CurrencyTextFieldController controller = CurrencyTextFieldController(
       currencySymbol: '', decimalSymbol: '.', thousandSymbol: ',');
   bool isPaymentProcessing = false;
   final LocalAuthentication auth = LocalAuthentication();
   bool authenticated = false;
+  String merchantNameFromClipboard = '';
+
+  @override
+  void initState() {
+    super.initState();
+    copyFromClipboard();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      copyFromClipboard();
+    }
+  }
+
   Future<void> _authenticate() async {
     try {
       authenticated = await auth.authenticate(
@@ -37,6 +60,16 @@ class _TransferPageState extends State<TransferPage> {
     }
   }
 
+  void copyFromClipboard() async {
+    if (widget.merchant['name'] != 'default p2p') return;
+    ClipboardData? data = await Clipboard.getData('text/plain');
+    if (data == null) return;
+    if (merchantNameFromClipboard == data.text) return;
+    setState(() {
+      merchantNameFromClipboard = data.text ?? '';
+    });
+  }
+
   Future<void> saveTransaction() async {
     ShowDialog.loadingDialog(context);
     await _authenticate();
@@ -47,13 +80,27 @@ class _TransferPageState extends State<TransferPage> {
     }
 
     final supabase = Supabase.instance.client;
-    final List<Map<String, dynamic>> transactions =
-        await supabase.from('transactions').insert({
-      'merchant_id': widget.merchant['id'],
-      'amount': controller.text,
-    }).select('*, merchants(*)');
+    List<Map<String, dynamic>> transactions = [];
+
+    if (widget.merchant['name'] == 'default p2p') {
+      final merchants = await supabase.from('merchants').insert({
+        'name': merchantNameFromClipboard,
+        'type': 'p2p',
+      }).select();
+      transactions = await supabase.from('transactions').insert({
+        'merchant_id': merchants[0]['id'],
+        'amount': controller.text,
+      }).select('*, merchants(*)');
+    } else {
+      transactions = await supabase.from('transactions').insert({
+        'merchant_id': widget.merchant['id'],
+        'amount': controller.text,
+      }).select('*, merchants(*)');
+    }
+
     if (!mounted) return;
     Navigator.pop(context);
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       isPaymentProcessing = true;
     });
@@ -64,7 +111,7 @@ class _TransferPageState extends State<TransferPage> {
       if (!mounted) return;
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ReceiptPage(
+          builder: (context) => TransferReceiptPage(
             transactions: transactions,
           ),
         ),
@@ -208,7 +255,9 @@ class _TransferPageState extends State<TransferPage> {
                                           ),
                                           Flexible(
                                             child: Text(
-                                              widget.merchant['name'],
+                                              merchantNameFromClipboard.isEmpty
+                                                  ? widget.merchant['name']
+                                                  : merchantNameFromClipboard,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 16,
