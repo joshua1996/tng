@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/merchant_page.dart';
 import 'package:tng/models/shortcut.dart';
@@ -8,297 +9,367 @@ import 'package:tng/scan_page.dart';
 import 'package:tng/transaction_history_page.dart';
 import 'package:tng/transfer_page.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final supabase = Supabase.instance.client;
-    List<ShortcutButton> shortcutButtons = [
-      ShortcutButton(
-        title: '收费站',
-        image: 'toll',
-      ),
-      ShortcutButton(
-        title: '停车费',
-        image: 'parking',
-      ),
-      ShortcutButton(
-        title: 'GOpinjam',
-        image: 'go_pinjam',
-      ),
-      ShortcutButton(
-        title: 'GOprotect',
-        image: 'go_protect',
-      ),
-      ShortcutButton(
-        title: '手机预付',
-        image: 'topup',
-      ),
-      ShortcutButton(
-        title: '账单缴费',
-        image: 'bill',
-      ),
-      ShortcutButton(
-        title: 'GOinvest',
-        image: 'go_invest',
-      ),
-      ShortcutButton(
-        title: 'ASNB',
-        image: 'asnb',
-      ),
-      ShortcutButton(
-        title: 'CTOS Report',
-        image: 'ctos',
-      ),
-      ShortcutButton(
-        title: 'A+ Rewards',
-        image: 'a_plus_reward',
-      ),
-      ShortcutButton(
-        title: '商家',
-        image: 'merchant',
-      ),
-      ShortcutButton(
-        title: '其他',
-        image: 'more',
-      ),
-    ];
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    void showBalance() {
-      showModalBottomSheet<void>(
-        context: context,
-        // showDragHandle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(16.0),
-          ),
+class _HomeScreenState extends State<HomeScreen> {
+  final supabase = Supabase.instance.client;
+
+  @override
+  void initState() {
+    super.initState();
+
+    const QuickActions quickActions = QuickActions();
+    quickActions.initialize((String shortcutType) {
+      if (shortcutType == 'sme') {
+        goToPaymentPage();
+      } else if (shortcutType == 'p2p') {
+        goToTransferPage();
+      }
+    });
+
+    quickActions.setShortcutItems(<ShortcutItem>[
+      // NOTE: This first action icon will only work on iOS.
+      // In a real world project keep the same file name for both platforms.
+      const ShortcutItem(
+        type: 'sme',
+        localizedTitle: 'SME',
+        localizedSubtitle: 'Action one subtitle',
+        icon: 'AppIcon',
+      ),
+      // NOTE: This second action icon will only work on Android.
+      // In a real world project keep the same file name for both platforms.
+      const ShortcutItem(
+        type: 'p2p',
+        localizedTitle: 'P2P',
+        icon: 'ic_launcher',
+      ),
+    ]);
+  }
+
+  List<ShortcutButton> shortcutButtons = [
+    ShortcutButton(
+      title: '收费站',
+      image: 'toll',
+    ),
+    ShortcutButton(
+      title: '停车费',
+      image: 'parking',
+    ),
+    ShortcutButton(
+      title: 'GOpinjam',
+      image: 'go_pinjam',
+    ),
+    ShortcutButton(
+      title: 'GOprotect',
+      image: 'go_protect',
+    ),
+    ShortcutButton(
+      title: '手机预付',
+      image: 'topup',
+    ),
+    ShortcutButton(
+      title: '账单缴费',
+      image: 'bill',
+    ),
+    ShortcutButton(
+      title: 'GOinvest',
+      image: 'go_invest',
+    ),
+    ShortcutButton(
+      title: 'ASNB',
+      image: 'asnb',
+    ),
+    ShortcutButton(
+      title: 'CTOS Report',
+      image: 'ctos',
+    ),
+    ShortcutButton(
+      title: 'A+ Rewards',
+      image: 'a_plus_reward',
+    ),
+    ShortcutButton(
+      title: '商家',
+      image: 'merchant',
+    ),
+    ShortcutButton(
+      title: '其他',
+      image: 'more',
+    ),
+  ];
+
+  void showBalance() {
+    showModalBottomSheet<void>(
+      context: context,
+      // showDragHandle: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(16.0),
         ),
-        backgroundColor: Colors.white,
-        builder: (BuildContext context) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              height: 364,
-              child: Column(
-                children: [
-                  Container(
-                    height: 4,
-                    width: 32,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffe8e8e8),
-                      borderRadius: BorderRadius.circular(4),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: 364,
+            child: Column(
+              children: [
+                Container(
+                  height: 4,
+                  width: 32,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffe8e8e8),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '可用余额',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '可用余额',
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      'RM 29,559.06',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        'RM 29,559.06',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Image.asset(
-                        'assets/images/wallet_safe_white.jpg',
-                        width: 20,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/go_plus.jpg',
-                        height: 24,
-                      ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      const Text(
-                        'GO+ 余额',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      SizedBox(
-                        width: 24 + 16,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'RM 9559.06',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'RM 0.88',
-                            style: TextStyle(
-                              color: Color(0xff69b475),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.remove_red_eye_outlined,
-                        color: Color(0xff005abe),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  const Divider(
-                    thickness: 0.5,
-                    color: Color(
-                      0xffb6b6b6,
+                    const SizedBox(
+                      width: 10,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/ewallet.jpg',
-                        height: 24,
-                      ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      const Text(
-                        '电子钱包余额',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      SizedBox(
-                        width: 24 + 16,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'RM 20,000.00',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.remove_red_eye_outlined,
-                        color: Color(0xff005abe),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 12,
+                    Image.asset(
+                      'assets/images/wallet_safe_white.jpg',
+                      width: 20,
                     ),
-                    decoration: const BoxDecoration(
-                      color: Color(0xffe3f6fe),
+                  ],
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/go_plus.jpg',
+                      height: 24,
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    const Text(
+                      'GO+ 余额',
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                const Row(
+                  children: [
+                    SizedBox(
+                      width: 24 + 16,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text.rich(
-                          TextSpan(
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                            children: [
-                              TextSpan(text: '您可用转账至 '),
-                              TextSpan(
-                                text: 'RM 29,559.06',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'RM 9559.06',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Icon(
-                          Icons.keyboard_arrow_right,
-                          color: Color(0xff2463f3),
-                          size: 26,
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'RM 0.88',
+                          style: TextStyle(
+                            color: Color(0xff69b475),
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
+                    Spacer(),
+                    Icon(
+                      Icons.remove_red_eye_outlined,
+                      color: Color(0xff005abe),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                const Divider(
+                  thickness: 0.5,
+                  color: Color(
+                    0xffb6b6b6,
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text.rich(
-                    TextSpan(
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/ewallet.jpg',
+                      height: 24,
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    const Text(
+                      '电子钱包余额',
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                const Row(
+                  children: [
+                    SizedBox(
+                      width: 24 + 16,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'RM 20,000.00',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.remove_red_eye_outlined,
+                      color: Color(0xff005abe),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 12,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Color(0xffe3f6fe),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text.rich(
                         TextSpan(
-                          text: '当电子钱包余额不足时，GO+余额可被用来支付所有交易。',
                           style: TextStyle(
-                            color: Colors.grey.shade600,
+                            fontSize: 12,
                           ),
+                          children: [
+                            TextSpan(text: '您可用转账至 '),
+                            TextSpan(
+                              text: 'RM 29,559.06',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        const TextSpan(
-                          text: '了解更多',
-                          style: TextStyle(
-                            color: Color(0xff436de9),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_right,
+                        color: Color(0xff2463f3),
+                        size: 26,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '当电子钱包余额不足时，GO+余额可被用来支付所有交易。',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const TextSpan(
+                        text: '了解更多',
+                        style: TextStyle(
+                          color: Color(0xff436de9),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          );
-        },
-      );
-    }
+          ),
+        );
+      },
+    );
+  }
 
+  Future<void> goToPaymentPage() async {
+    final merchants = await supabase
+        .from('merchants')
+        .select()
+        .eq('name', 'default sme')
+        .limit(1);
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PaymentPage(
+          merchant: merchants.isEmpty ? {} : merchants[0],
+        ),
+      ),
+    );
+  }
+
+  Future<void> goToTransferPage() async {
+    final merchants = await supabase
+        .from('merchants')
+        .select()
+        .eq('name', 'default p2p')
+        .limit(1);
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TransferPage(
+          merchant: merchants.isEmpty ? {} : merchants[0],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -333,37 +404,11 @@ class HomeScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () async {
-                              final merchants = await supabase
-                                  .from('merchants')
-                                  .select()
-                                  .eq('name', 'default sme')
-                                  .limit(1);
-                              if (!context.mounted) return;
-                              await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => PaymentPage(
-                                    merchant:
-                                        merchants.isEmpty ? {} : merchants[0],
-                                  ),
-                                ),
-                              );
+                            onTap: () {
+                              goToPaymentPage();
                             },
-                            onLongPress: () async {
-                              final merchants = await supabase
-                                  .from('merchants')
-                                  .select()
-                                  .eq('name', 'default p2p')
-                                  .limit(1);
-                              if (!context.mounted) return;
-                              await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => TransferPage(
-                                    merchant:
-                                        merchants.isEmpty ? {} : merchants[0],
-                                  ),
-                                ),
-                              );
+                            onLongPress: () {
+                              goToTransferPage();
                             },
                             child: badges.Badge(
                               position: badges.BadgePosition.custom(
