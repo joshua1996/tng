@@ -65,9 +65,9 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
     final supabase = Supabase.instance.client;
     List<Map<String, dynamic>> transactions = [];
     if (widget.merchant['name'] == 'default sme') {
-      final merchants = await supabase.from('merchants').insert({
+      final merchants = await supabase.from('merchants').upsert({
         'name': merchantNameFromClipboard,
-      }).select();
+      }, onConflict: 'name').select();
       transactions = await supabase.from('transactions').insert({
         'merchant_id': merchants[0]['id'],
         'amount': controller.text,

@@ -81,12 +81,11 @@ class _TransferPageState extends State<TransferPage>
 
     final supabase = Supabase.instance.client;
     List<Map<String, dynamic>> transactions = [];
-
     if (widget.merchant['name'] == 'default p2p') {
-      final merchants = await supabase.from('merchants').insert({
+      final merchants = await supabase.from('merchants').upsert({
         'name': merchantNameFromClipboard,
         'type': 'p2p',
-      }).select();
+      }, onConflict: 'name').select();
       transactions = await supabase.from('transactions').insert({
         'merchant_id': merchants[0]['id'],
         'amount': controller.text,
@@ -318,6 +317,14 @@ class _TransferPageState extends State<TransferPage>
                               SizedBox(
                                 height: 16,
                               ),
+                              // TextField(
+                              //   decoration: InputDecoration(
+                              //     // contentPadding: EdgeInsets.only(
+                              //     //   bottom: 0,
+                              //     // ),
+                              //     // isDense: true,
+                              //   ),
+                              // ),
                               Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xfffafafa),
@@ -333,6 +340,7 @@ class _TransferPageState extends State<TransferPage>
                                     cursorColor: Color(0xff0064ff),
                                     decoration: InputDecoration(
                                       labelText: '金额',
+                                      isDense: true,
                                       helper: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -344,6 +352,7 @@ class _TransferPageState extends State<TransferPage>
                                                 color: Color(
                                                   0xff787878,
                                                 ),
+                                                fontSize: 12,
                                               ),
                                             ),
                                           ),
@@ -364,7 +373,7 @@ class _TransferPageState extends State<TransferPage>
                                               (Set<WidgetState> states) {
                                         final Color color =
                                             states.contains(WidgetState.focused)
-                                                ? Color(0xff0064ff)
+                                                ? Color(0xff2869fe)
                                                 : Color(0xff646464);
                                         return TextStyle(color: color);
                                       }),
@@ -375,7 +384,7 @@ class _TransferPageState extends State<TransferPage>
                                         child: Text(
                                           'RM',
                                           style: TextStyle(
-                                            color: Color(0xff0064ff),
+                                            color: Color(0xff2869fe),
                                             fontWeight: FontWeight.bold,
                                             // height: 1
                                           ),
@@ -412,7 +421,14 @@ class _TransferPageState extends State<TransferPage>
                                 height: 16,
                               ),
                               TextField(
-                                maxLength: 25,
+                                controller: TextEditingController()
+                                  ..text = merchantNameFromClipboard.isEmpty
+                                      ? widget.merchant['name']
+                                      : merchantNameFromClipboard,
+                                maxLength: 50,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
                                 decoration: InputDecoration(
                                   labelText: '转账说明',
                                   labelStyle: TextStyle(
@@ -421,7 +437,8 @@ class _TransferPageState extends State<TransferPage>
                                   filled: true,
                                   fillColor: Color(0xfff9f9f9),
                                   floatingLabelStyle: TextStyle(
-                                    color: Color(0xff0064ff),
+                                    color: Color(0xff868686),
+                                    fontSize: 10,
                                   ),
                                   focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
