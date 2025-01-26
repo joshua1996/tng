@@ -85,6 +85,7 @@ class _ScanPageState extends State<ScanPage> {
                 scannedCode = barcodes.barcodes.firstOrNull?.displayValue ?? '';
                 ShowDialog.loadingDialog(context);
                 final merchants = await getMerchants();
+                await controller.stop();
                 if (!context.mounted) return;
                 Navigator.pop(context);
                 if (merchants[0]['type'] == 'sme') {
@@ -105,6 +106,7 @@ class _ScanPageState extends State<ScanPage> {
                   );
                 }
                 scannedCode = '';
+                await controller.start();
               }
             },
             // overlayBuilder: (context, constraints) {
@@ -230,8 +232,6 @@ class ScannerOverlay extends CustomPainter {
       backgroundPath,
       cutoutPath,
     );
-
-
 
     // First, draw the background,
     // with a cutout area that is a bit larger than the scan window.

@@ -1,10 +1,12 @@
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/transfer_receipt_page.dart';
 import 'package:tng/show_dialog.dart';
+import 'package:tng/widgets/transaction_loading.dart';
 
 class TransferPage extends StatefulWidget {
   final Map<String, dynamic> merchant;
@@ -121,38 +123,7 @@ class _TransferPageState extends State<TransferPage>
   @override
   Widget build(BuildContext context) {
     return isPaymentProcessing
-        ? Scaffold(
-            backgroundColor: Color(0xffc0dffe),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image(
-                    image: AssetImage('assets/images/transfer_money.png'),
-                    width: MediaQuery.of(context).size.width / 2,
-                  ),
-                ),
-                SizedBox(
-                  height: 75,
-                ),
-                Text(
-                  'Transferring your\nmoney safely...',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 75,
-                ),
-                Image(
-                  image: AssetImage('assets/images/cloud.png'),
-                  width: MediaQuery.of(context).size.width / 2,
-                ),
-              ],
-            ),
-          )
+        ? TransactionLoading()
         : Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
@@ -197,203 +168,269 @@ class _TransferPageState extends State<TransferPage>
                         ),
                       ),
                       Positioned(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '转账至',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border:
-                                      Border.all(color: Colors.grey.shade50),
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //     color: Colors.grey.withOpacity(0.2),
-                                  //     spreadRadius: 1,
-                                  //     blurRadius: 2,
-                                  //     offset:
-                                  //         Offset(0, 1), // changes position of shadow
-                                  //   ),
-                                  // ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 28,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: const Color(0xffc9efff),
-                                            ),
-                                            child: const Icon(
-                                              Icons.person_outlined,
-                                              color: Color(0xff2a62f6),
-                                              size: 30,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              merchantNameFromClipboard.isEmpty
-                                                  ? widget.merchant['name']
-                                                  : merchantNameFromClipboard,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '转账至',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffebf3ff),
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(8),
-                                          bottomRight: Radius.circular(8),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 12,
-                                        ),
-                                        child: Row(
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xfff6f6db),
+                                      // borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                          color: Colors.grey.shade50),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Stack(
                                           children: [
-                                            Container(
-                                              height: 16,
-                                              width: 16,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  width: 1.5,
-                                                ),
-                                              ),
-                                              child: Icon(
-                                                Icons.check,
-                                                size: 12,
-                                              ),
+                                            // Positioned.fill(
+                                            //   child: Container(
+                                            //     decoration: BoxDecoration(
+                                            //       border: Border.all(
+                                            //         color: Colors
+                                            //             .red, // Red frame color
+                                            //         width: 2.0,
+                                            //       ),
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            Image.asset(
+                                              'assets/images/cny-border-frame.png', // Path to your red frame image
+                                              fit: BoxFit
+                                                  .fill, // Ensure the image fills the container
                                             ),
-                                            SizedBox(
-                                              width: 16,
-                                            ),
-                                            Flexible(
-                                              child: Text(
-                                                '转帐前, 请先验证收款人姓名。',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 12,
-                                                ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 16,
+                                                vertical: 28,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: const Color(
+                                                          0xffc9efff),
+                                                    ),
+                                                    child: const Icon(
+                                                      Icons.person_outlined,
+                                                      color: Color(0xff2a62f6),
+                                                      size: 30,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 16,
+                                                  ),
+                                                  Flexible(
+                                                    child: Text(
+                                                      merchantNameFromClipboard
+                                                              .isEmpty
+                                                          ? widget
+                                                              .merchant['name']
+                                                          : merchantNameFromClipboard,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              // TextField(
-                              //   decoration: InputDecoration(
-                              //     // contentPadding: EdgeInsets.only(
-                              //     //   bottom: 0,
-                              //     // ),
-                              //     // isDense: true,
-                              //   ),
-                              // ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0xfffafafa),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 4,
-                                  ),
-                                  child: TextField(
-                                    controller: controller,
-                                    keyboardType: TextInputType.number,
-                                    cursorColor: Color(0xff0064ff),
-                                    decoration: InputDecoration(
-                                      labelText: '金额',
-                                      isDense: true,
-                                      helper: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Flexible(
-                                            child: Text(
-                                              '您可以转账高达 RM 559.06',
-                                              style: TextStyle(
-                                                color: Color(
-                                                  0xff787878,
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffebf3ff),
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(8),
+                                              bottomRight: Radius.circular(8),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 12,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  height: 16,
+                                                  width: 16,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 12,
+                                                  ),
                                                 ),
-                                                fontSize: 12,
+                                                SizedBox(
+                                                  width: 16,
+                                                ),
+                                                Flexible(
+                                                  child: Text(
+                                                    '转帐前, 请先验证收款人姓名。',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  // TextField(
+                                  //   decoration: InputDecoration(
+                                  //     // contentPadding: EdgeInsets.only(
+                                  //     //   bottom: 0,
+                                  //     // ),
+                                  //     // isDense: true,
+                                  //   ),
+                                  // ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xfffafafa),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 4,
+                                      ),
+                                      child: TextField(
+                                        controller: controller,
+                                        keyboardType: TextInputType.number,
+                                        cursorColor: Color(0xff0064ff),
+                                        decoration: InputDecoration(
+                                          labelText: '金额',
+                                          isDense: true,
+                                          helper: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  '您可以转账高达 RM 559.06',
+                                                  style: TextStyle(
+                                                    color: Color(
+                                                      0xff787878,
+                                                    ),
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 4,
+                                              ),
+                                              Icon(
+                                                Icons.info_outline,
+                                                color: Color(0xff1b3fec),
+                                                size: 18,
+                                              ),
+                                            ],
+                                          ),
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                          labelStyle:
+                                              WidgetStateTextStyle.resolveWith(
+                                                  (Set<WidgetState> states) {
+                                            final Color color = states.contains(
+                                                    WidgetState.focused)
+                                                ? Color(0xff2869fe)
+                                                : Color(0xff646464);
+                                            return TextStyle(color: color);
+                                          }),
+                                          prefix: Padding(
+                                            padding: const EdgeInsets.only(
+                                              right: 4,
+                                            ),
+                                            child: Text(
+                                              'RM',
+                                              style: TextStyle(
+                                                color: Color(0xff2869fe),
+                                                fontWeight: FontWeight.bold,
+                                                // height: 1
                                               ),
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: 4,
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0xff646464),
+                                            ),
                                           ),
-                                          Icon(
-                                            Icons.info_outline,
-                                            color: Color(0xff1b3fec),
-                                            size: 18,
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0xff0064ff),
+                                              width: 2.0,
+                                            ),
                                           ),
-                                        ],
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xff0064ff),
+                                        ),
+                                        onChanged: (value) {
+                                          if (!isKeyin) {
+                                            setState(() {
+                                              isKeyin = true;
+                                            });
+                                          }
+                                        },
                                       ),
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.always,
-                                      labelStyle:
-                                          WidgetStateTextStyle.resolveWith(
-                                              (Set<WidgetState> states) {
-                                        final Color color =
-                                            states.contains(WidgetState.focused)
-                                                ? Color(0xff2869fe)
-                                                : Color(0xff646464);
-                                        return TextStyle(color: color);
-                                      }),
-                                      prefix: Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 4,
-                                        ),
-                                        child: Text(
-                                          'RM',
-                                          style: TextStyle(
-                                            color: Color(0xff2869fe),
-                                            fontWeight: FontWeight.bold,
-                                            // height: 1
-                                          ),
-                                        ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  TextField(
+                                    controller: TextEditingController()
+                                      ..text = merchantNameFromClipboard.isEmpty
+                                          ? widget.merchant['name']
+                                          : merchantNameFromClipboard,
+                                    maxLength: 50,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    decoration: InputDecoration(
+                                      labelText: '转账说明',
+                                      labelStyle: TextStyle(
+                                        color: Color(0xff787878),
                                       ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xff646464),
-                                        ),
+                                      filled: true,
+                                      fillColor: Color(0xfff9f9f9),
+                                      floatingLabelStyle: TextStyle(
+                                        color: Color(0xff868686),
+                                        fontSize: 10,
                                       ),
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
@@ -401,87 +438,64 @@ class _TransferPageState extends State<TransferPage>
                                           width: 2.0,
                                         ),
                                       ),
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xff0064ff),
-                                    ),
-                                    onChanged: (value) {
-                                      if (!isKeyin) {
-                                        setState(() {
-                                          isKeyin = true;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              TextField(
-                                controller: TextEditingController()
-                                  ..text = merchantNameFromClipboard.isEmpty
-                                      ? widget.merchant['name']
-                                      : merchantNameFromClipboard,
-                                maxLength: 50,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                decoration: InputDecoration(
-                                  labelText: '转账说明',
-                                  labelStyle: TextStyle(
-                                    color: Color(0xff787878),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xfff9f9f9),
-                                  floatingLabelStyle: TextStyle(
-                                    color: Color(0xff868686),
-                                    fontSize: 10,
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xff0064ff),
-                                      width: 2.0,
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xffb4b4b4),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xffb4b4b4),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xfff6f6db),
+                                      border: Border.all(
+                                        color: Color(0xffa81d22),
+                                        width: 1.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Text(
+                                      '选择一个新年祝福语',
+                                      style: TextStyle(
+                                        color: Color(0xffa81d22),
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              Wrap(
-                                // mainAxisAlignment:
-                                //     MainAxisAlignment.spaceBetween,
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: [
-                                  TransferOption(
-                                    title: '资金转账',
-                                  ),
-                                  TransferOption(
-                                    title: '餐饮',
-                                  ),
-                                  TransferOption(
-                                    title: '礼物',
-                                  ),
-                                  TransferOption(
-                                    title: '娱乐',
-                                  ),
-                                  TransferOption(
-                                    title: '其他',
-                                    isSelected: true,
-                                  ),
+
+                                  // Wrap(
+                                  //   // mainAxisAlignment:
+                                  //   //     MainAxisAlignment.spaceBetween,
+                                  //   spacing: 8,
+                                  //   runSpacing: 8,
+                                  //   children: [
+                                  //     TransferOption(
+                                  //       title: '资金转账',
+                                  //     ),
+                                  //     TransferOption(
+                                  //       title: '餐饮',
+                                  //     ),
+                                  //     TransferOption(
+                                  //       title: '礼物',
+                                  //     ),
+                                  //     TransferOption(
+                                  //       title: '娱乐',
+                                  //     ),
+                                  //     TransferOption(
+                                  //       title: '其他',
+                                  //       isSelected: true,
+                                  //     ),
+                                  //   ],
+                                  // ),
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Image.asset('assets/images/cny-bottom-image.png'),
+                          ],
                         ),
                       ),
                     ],

@@ -6,6 +6,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/payment_receipt_page.dart';
 import 'package:tng/show_dialog.dart';
+import 'package:tng/widgets/transaction_loading.dart';
 
 class PaymentPage extends StatefulWidget {
   final Map<String, dynamic> merchant;
@@ -119,38 +120,7 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return isPaymentProcessing
-        ? Scaffold(
-            backgroundColor: Color(0xffc0dffe),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image(
-                    image: AssetImage('assets/images/transfer_money.png'),
-                    width: MediaQuery.of(context).size.width / 2,
-                  ),
-                ),
-                SizedBox(
-                  height: 75,
-                ),
-                Text(
-                  'Transferring your\nmoney safely...',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 75,
-                ),
-                Image(
-                  image: AssetImage('assets/images/cloud.png'),
-                  width: MediaQuery.of(context).size.width / 2,
-                ),
-              ],
-            ),
-          )
+        ? TransactionLoading()
         : Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(

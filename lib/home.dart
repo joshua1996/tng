@@ -371,6 +371,146 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xff0064ff),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.home_outlined,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      '首页',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Color(0xff6d6d6d),
+                    ),
+                    Text(
+                      'eShop',
+                      style: TextStyle(
+                        color: Color(0xff6d6d6d),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/images/gold.png',
+                      height: 24,
+                    ),
+                    Text(
+                      'GOfinance',
+                      style: TextStyle(
+                        color: Color(0xff6d6d6d),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.redeem_outlined,
+                      color: Color(0xff6d6d6d),
+                    ),
+                    Text(
+                      'GOrewards',
+                      style: TextStyle(
+                        color: Color(0xff6d6d6d),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      color: Color(0xff6d6d6d),
+                    ),
+                    Text(
+                      'Near Me',
+                      style: TextStyle(
+                        color: Color(0xff6d6d6d),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -491,6 +631,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 17,
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: 4,
                   ),
                   Row(
                     children: [
