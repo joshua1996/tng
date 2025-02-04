@@ -29,7 +29,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ]),
             child: Padding(
@@ -39,29 +39,29 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Color(0xff2367fb)),
+                      border: Border.all(color: const Color(0xff2367fb)),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Icon(
                         Icons.share_outlined,
                         color: Color(0xff2367fb),
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 16,
                   ),
                   Expanded(
                     child: FilledButton(
                       style: FilledButton.styleFrom(
-                        backgroundColor: Color(0xff2665fe),
+                        backgroundColor: const Color(0xff2665fe),
                       ),
                       onPressed: () {
                         Navigator.of(context)
                             .popUntil((ModalRoute.withName('/')));
                       },
-                      child: Text('完成'),
+                      child: const Text('完成'),
                     ),
                   ),
                 ],
@@ -73,17 +73,17 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Center(
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Color(0xff52d865),
                         shape: BoxShape.circle,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.check_outlined,
                           color: Colors.white,
@@ -92,7 +92,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   RichText(
@@ -105,28 +105,28 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                         TextSpan(
                           text:
                               ' ${widget.transactions[0]['amount'].toStringAsFixed(2)}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text(
+                  const Text(
                     '已转账',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           '接收者',
                           style: TextStyle(
@@ -137,7 +137,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                       Expanded(
                         child: Text(
                           widget.transactions[0]['merchants']['name'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.right,
@@ -145,14 +145,14 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           '备注',
                           style: TextStyle(
@@ -163,7 +163,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                       Expanded(
                         child: Text(
                           widget.transactions[0]['merchants']['name'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.right,
@@ -171,7 +171,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
         
@@ -179,7 +179,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           '日期与时间',
                           style: TextStyle(
@@ -193,7 +193,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                             DateTime.parse(widget.transactions[0]['datetime'])
                                 .toLocal(),
                           ),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.right,
@@ -201,7 +201,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
         

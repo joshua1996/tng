@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/payment_page.dart';
@@ -58,16 +57,16 @@ class _ScanPageState extends State<ScanPage> {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.white, //change your color here
         ),
-        title: Text(
+        title: const Text(
           '扫码',
           style: TextStyle(
             color: Colors.white,
           ),
         ),
-        backgroundColor: Color(
+        backgroundColor: const Color(
           0xff005abe,
         ),
       ),
@@ -141,7 +140,7 @@ class _ScanPageState extends State<ScanPage> {
           Positioned(
             top: MediaQuery.of(context).size.height / 2.5 - 160,
             left: MediaQuery.of(context).size.width / 2 - 50,
-            child: Text(
+            child: const Text(
               '扫条码或二维码',
               style: TextStyle(
                 color: Colors.white,
@@ -153,10 +152,10 @@ class _ScanPageState extends State<ScanPage> {
             left: MediaQuery.of(context).size.width / 2 - 66,
             child: FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: Color(0xff0064ff),
+                backgroundColor: const Color(0xff0064ff),
               ),
               onPressed: () {},
-              child: Text('从图片库扫码'),
+              child: const Text('从图片库扫码'),
             ),
           ),
           Positioned(
@@ -167,8 +166,8 @@ class _ScanPageState extends State<ScanPage> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 1),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Image(
                   image: AssetImage('assets/images/torch_light.png'),
                   height: 24,
@@ -240,7 +239,7 @@ class ScannerOverlay extends CustomPainter {
     // canvas.drawRRect(borderRect, borderPaint);
 
     final paint = Paint()
-      ..color = Color(
+      ..color = const Color(
         0xff005abe,
       )
       ..strokeWidth = 4
@@ -251,48 +250,48 @@ class ScannerOverlay extends CustomPainter {
     // 左上角
     canvas.drawLine(
       scanWindow.topLeft,
-      scanWindow.topLeft + Offset(cornerLength, 0),
+      scanWindow.topLeft + const Offset(cornerLength, 0),
       paint,
     );
     canvas.drawLine(
       scanWindow.topLeft,
-      scanWindow.topLeft + Offset(0, cornerLength),
+      scanWindow.topLeft + const Offset(0, cornerLength),
       paint,
     );
 
     // 右上角
     canvas.drawLine(
       scanWindow.topRight,
-      scanWindow.topRight + Offset(-cornerLength, 0),
+      scanWindow.topRight + const Offset(-cornerLength, 0),
       paint,
     );
     canvas.drawLine(
       scanWindow.topRight,
-      scanWindow.topRight + Offset(0, cornerLength),
+      scanWindow.topRight + const Offset(0, cornerLength),
       paint,
     );
 
     // 左下角
     canvas.drawLine(
       scanWindow.bottomLeft,
-      scanWindow.bottomLeft + Offset(cornerLength, 0),
+      scanWindow.bottomLeft + const Offset(cornerLength, 0),
       paint,
     );
     canvas.drawLine(
       scanWindow.bottomLeft,
-      scanWindow.bottomLeft + Offset(0, -cornerLength),
+      scanWindow.bottomLeft + const Offset(0, -cornerLength),
       paint,
     );
 
     // 右下角
     canvas.drawLine(
       scanWindow.bottomRight,
-      scanWindow.bottomRight + Offset(-cornerLength, 0),
+      scanWindow.bottomRight + const Offset(-cornerLength, 0),
       paint,
     );
     canvas.drawLine(
       scanWindow.bottomRight,
-      scanWindow.bottomRight + Offset(0, -cornerLength),
+      scanWindow.bottomRight + const Offset(0, -cornerLength),
       paint,
     );
   }

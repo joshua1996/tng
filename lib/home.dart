@@ -373,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),
@@ -384,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xff0064ff),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
@@ -393,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(
                   vertical: 8,
                 ),
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
@@ -417,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(
                   vertical: 8,
                 ),
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
@@ -448,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'assets/images/gold.png',
                       height: 24,
                     ),
-                    Text(
+                    const Text(
                       'GOfinance',
                       style: TextStyle(
                         color: Color(0xff6d6d6d),
@@ -465,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(
                   vertical: 8,
                 ),
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
@@ -489,7 +489,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(
                   vertical: 8,
                 ),
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
@@ -539,7 +539,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Image(
                             image:
-                                AssetImage('assets/images/country_select.png'),
+                                const AssetImage('assets/images/country_select.png'),
                             width: MediaQuery.of(context).size.width * 0.7,
                           ),
                           GestureDetector(
@@ -584,7 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               'assets/images/walletsafe.jpg',
                               width: 20,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 16,
                             ),
                             const Text(
@@ -595,7 +595,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 26,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 16,
                             ),
                             GestureDetector(
@@ -616,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  Row(
+                  const Row(
                     children: [
                       Text(
                         '查看余额详情',
@@ -632,7 +632,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 4,
                   ),
                   Row(
@@ -690,8 +690,8 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Container(
                   height: 44,
-                  decoration: BoxDecoration(
-                      color: const Color(0xff005abe),
+                  decoration: const BoxDecoration(
+                      color: Color(0xff005abe),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(16.0),
                         bottomRight: Radius.circular(16.0),

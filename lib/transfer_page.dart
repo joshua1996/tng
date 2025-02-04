@@ -1,7 +1,6 @@
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/transfer_receipt_page.dart';
@@ -54,7 +53,7 @@ class _TransferPageState extends State<TransferPage>
           stickyAuth: true,
         ),
       );
-    } on PlatformException catch (e) {
+    } on PlatformException {
       return;
     }
     if (!mounted) {
@@ -123,12 +122,12 @@ class _TransferPageState extends State<TransferPage>
   @override
   Widget build(BuildContext context) {
     return isPaymentProcessing
-        ? TransactionLoading()
+        ? const TransactionLoading()
         : Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Text(
+              title: const Text(
                 '转账',
                 style: TextStyle(
                   color: Colors.white,
@@ -145,10 +144,10 @@ class _TransferPageState extends State<TransferPage>
               width: double.infinity,
               child: FilledButton(
                 style: FilledButton.styleFrom(
-                  backgroundColor: Color(0xff2665fe),
+                  backgroundColor: const Color(0xff2665fe),
                 ),
                 onPressed: isKeyin ? saveTransaction : null,
-                child: Text(
+                child: const Text(
                   '确认转账',
                   style: TextStyle(
                       // color: isKeyin ? Colors.white : Color(0xff969696),
@@ -163,7 +162,7 @@ class _TransferPageState extends State<TransferPage>
                     children: [
                       Container(
                         height: 105,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Color(0xff005abe),
                         ),
                       ),
@@ -175,19 +174,19 @@ class _TransferPageState extends State<TransferPage>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     '转账至',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 16,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0xfff6f6db),
+                                      color: const Color(0xfff6f6db),
                                       // borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
                                           color: Colors.grey.shade50),
@@ -224,9 +223,9 @@ class _TransferPageState extends State<TransferPage>
                                                     padding:
                                                         const EdgeInsets.all(
                                                             10),
-                                                    decoration: BoxDecoration(
+                                                    decoration: const BoxDecoration(
                                                       shape: BoxShape.circle,
-                                                      color: const Color(
+                                                      color: Color(
                                                           0xffc9efff),
                                                     ),
                                                     child: const Icon(
@@ -235,7 +234,7 @@ class _TransferPageState extends State<TransferPage>
                                                       size: 30,
                                                     ),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 16,
                                                   ),
                                                   Flexible(
@@ -245,7 +244,7 @@ class _TransferPageState extends State<TransferPage>
                                                           ? widget
                                                               .merchant['name']
                                                           : merchantNameFromClipboard,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 16,
@@ -258,7 +257,7 @@ class _TransferPageState extends State<TransferPage>
                                           ],
                                         ),
                                         Container(
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             color: Color(0xffebf3ff),
                                             borderRadius: BorderRadius.only(
                                               bottomLeft: Radius.circular(8),
@@ -281,15 +280,15 @@ class _TransferPageState extends State<TransferPage>
                                                       width: 1.5,
                                                     ),
                                                   ),
-                                                  child: Icon(
+                                                  child: const Icon(
                                                     Icons.check,
                                                     size: 12,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 16,
                                                 ),
-                                                Flexible(
+                                                const Flexible(
                                                   child: Text(
                                                     '转帐前, 请先验证收款人姓名。',
                                                     style: TextStyle(
@@ -306,7 +305,7 @@ class _TransferPageState extends State<TransferPage>
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 16,
                                   ),
                                   // TextField(
@@ -318,7 +317,7 @@ class _TransferPageState extends State<TransferPage>
                                   //   ),
                                   // ),
                                   Container(
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Color(0xfffafafa),
                                     ),
                                     child: Padding(
@@ -329,11 +328,11 @@ class _TransferPageState extends State<TransferPage>
                                       child: TextField(
                                         controller: controller,
                                         keyboardType: TextInputType.number,
-                                        cursorColor: Color(0xff0064ff),
+                                        cursorColor: const Color(0xff0064ff),
                                         decoration: InputDecoration(
                                           labelText: '金额',
                                           isDense: true,
-                                          helper: Row(
+                                          helper: const Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
@@ -365,12 +364,12 @@ class _TransferPageState extends State<TransferPage>
                                                   (Set<WidgetState> states) {
                                             final Color color = states.contains(
                                                     WidgetState.focused)
-                                                ? Color(0xff2869fe)
-                                                : Color(0xff646464);
+                                                ? const Color(0xff2869fe)
+                                                : const Color(0xff646464);
                                             return TextStyle(color: color);
                                           }),
-                                          prefix: Padding(
-                                            padding: const EdgeInsets.only(
+                                          prefix: const Padding(
+                                            padding: EdgeInsets.only(
                                               right: 4,
                                             ),
                                             child: Text(
@@ -382,19 +381,19 @@ class _TransferPageState extends State<TransferPage>
                                               ),
                                             ),
                                           ),
-                                          enabledBorder: UnderlineInputBorder(
+                                          enabledBorder: const UnderlineInputBorder(
                                             borderSide: BorderSide(
                                               color: Color(0xff646464),
                                             ),
                                           ),
-                                          focusedBorder: UnderlineInputBorder(
+                                          focusedBorder: const UnderlineInputBorder(
                                             borderSide: BorderSide(
                                               color: Color(0xff0064ff),
                                               width: 2.0,
                                             ),
                                           ),
                                         ),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 22,
                                           fontWeight: FontWeight.w600,
                                           color: Color(0xff0064ff),
@@ -409,7 +408,7 @@ class _TransferPageState extends State<TransferPage>
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 16,
                                   ),
                                   TextField(
@@ -418,10 +417,10 @@ class _TransferPageState extends State<TransferPage>
                                           ? widget.merchant['name']
                                           : merchantNameFromClipboard,
                                     maxLength: 50,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                     ),
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       labelText: '转账说明',
                                       labelStyle: TextStyle(
                                         color: Color(0xff787878),
@@ -446,19 +445,19 @@ class _TransferPageState extends State<TransferPage>
                                     ),
                                   ),
                                   Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       horizontal: 16,
                                       vertical: 8,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Color(0xfff6f6db),
+                                      color: const Color(0xfff6f6db),
                                       border: Border.all(
-                                        color: Color(0xffa81d22),
+                                        color: const Color(0xffa81d22),
                                         width: 1.5,
                                       ),
                                       borderRadius: BorderRadius.circular(100),
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       '选择一个新年祝福语',
                                       style: TextStyle(
                                         color: Color(0xffa81d22),
@@ -523,20 +522,20 @@ class _TransferOptionState extends State<TransferOption> {
     double? fontSize = 12.0;
     if (widget.isSelected) {
       return Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 8,
         ),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Color(0xff0064ff),
+              color: const Color(0xff0064ff),
               width: 1,
             )),
         child: Text(
           widget.title,
           style: TextStyle(
-            color: Color(0xff0064ff),
+            color: const Color(0xff0064ff),
             fontSize: fontSize,
             fontWeight: FontWeight.w600,
           ),
@@ -544,12 +543,12 @@ class _TransferOptionState extends State<TransferOption> {
       );
     }
     return Container(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: 12,
         vertical: 8,
       ),
       decoration: BoxDecoration(
-        color: Color(0xffefefef),
+        color: const Color(0xffefefef),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Text(

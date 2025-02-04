@@ -16,20 +16,20 @@ class _TransferingPageState extends State<TransferingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffc0dffe),
+      backgroundColor: const Color(0xffc0dffe),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
             child: Image(
-              image: AssetImage('assets/images/transfer_money.png'),
+              image: const AssetImage('assets/images/transfer_money.png'),
               width: MediaQuery.of(context).size.width / 2,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 75,
           ),
-          Text(
+          const Text(
             'Transferring your\nmoney safely...',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -37,11 +37,11 @@ class _TransferingPageState extends State<TransferingPage> {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(
+          const SizedBox(
             height: 75,
           ),
           Image(
-            image: AssetImage('assets/images/cloud.png'),
+            image: const AssetImage('assets/images/cloud.png'),
             width: MediaQuery.of(context).size.width / 2,
           ),
         ],

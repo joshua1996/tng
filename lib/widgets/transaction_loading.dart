@@ -7,8 +7,8 @@ class TransactionLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffc0dffe),
-      bottomNavigationBar: Image(
+      backgroundColor: const Color(0xffc0dffe),
+      bottomNavigationBar: const Image(
         image: AssetImage('assets/images/cny-bottom-ads.png'),
       ),
       body: SingleChildScrollView(
@@ -17,40 +17,40 @@ class TransactionLoading extends StatelessWidget {
             Positioned(
               top: 200,
               child: Image(
-                image: AssetImage('assets/images/cloud.png'),
+                image: const AssetImage('assets/images/cloud.png'),
                 width: MediaQuery.of(context).size.width / 3,
               )
                   .animate(
                     onComplete: (controller) => controller.repeat(),
                   )
                   .moveX(
-                      duration: Duration(seconds: 2),
+                      duration: const Duration(seconds: 2),
                       begin: MediaQuery.of(context).size.width + 100,
                       end: -MediaQuery.of(context).size.width),
             ),
             Positioned(
               top: 300,
               child: Image(
-                image: AssetImage('assets/images/cloud.png'),
+                image: const AssetImage('assets/images/cloud.png'),
                 width: MediaQuery.of(context).size.width / 2,
               )
                   .animate(
                     onComplete: (controller) => controller.repeat(),
                   )
                   .moveX(
-                      duration: Duration(seconds: 1),
+                      duration: const Duration(seconds: 1),
                       begin: MediaQuery.of(context).size.width,
                       end: -MediaQuery.of(context).size.width),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 125,
                 ),
                 Center(
                     child: Image(
-                  image: AssetImage('assets/images/transfer_money.png'),
+                  image: const AssetImage('assets/images/transfer_money.png'),
                   width: MediaQuery.of(context).size.width / 2.5,
                 )
                         .animate(
@@ -59,15 +59,15 @@ class TransactionLoading extends StatelessWidget {
                               controller.repeat(reverse: true),
                         )
                         .scaleXY(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           begin: 1.0,
                           end: 1.2,
-                          delay: Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 500),
                         )),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
-                Text(
+                const Text(
                   'Transferring your\nmoney safely...',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class TransactionLoading extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 ),
               ],

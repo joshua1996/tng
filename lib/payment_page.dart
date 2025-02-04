@@ -2,7 +2,6 @@ import 'package:currency_textfield/currency_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/payment_receipt_page.dart';
 import 'package:tng/show_dialog.dart';
@@ -109,7 +108,7 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
           stickyAuth: true,
         ),
       );
-    } on PlatformException catch (e) {
+    } on PlatformException {
       return;
     }
     if (!mounted) {
@@ -120,11 +119,11 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return isPaymentProcessing
-        ? TransactionLoading()
+        ? const TransactionLoading()
         : Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Text(
+              title: const Text(
                 '支付',
                 style: TextStyle(
                   color: Colors.white,
@@ -138,12 +137,12 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                 children: [
                   Row(
                     children: [
-                      Image(
+                      const Image(
                         image: AssetImage('assets/images/merchant_icon.png'),
                         height: 42,
                         width: 42,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 16,
                       ),
                       Flexible(
@@ -151,7 +150,7 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                           merchantNameFromClipboard.isEmpty
                               ? widget.merchant['name']
                               : merchantNameFromClipboard,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -159,11 +158,11 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(0xfffafafa),
                     ),
                     child: Padding(
@@ -174,7 +173,7 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                       child: TextField(
                         controller: controller,
                         keyboardType: TextInputType.number,
-                        cursorColor: Color(0xff0064ff),
+                        cursorColor: const Color(0xff0064ff),
                         decoration: InputDecoration(
                           labelText: '金额',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -182,12 +181,12 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                               (Set<WidgetState> states) {
                             final Color color =
                                 states.contains(WidgetState.focused)
-                                    ? Color(0xff0064ff)
-                                    : Color(0xff646464);
+                                    ? const Color(0xff0064ff)
+                                    : const Color(0xff646464);
                             return TextStyle(color: color);
                           }),
-                          prefix: Padding(
-                            padding: const EdgeInsets.only(
+                          prefix: const Padding(
+                            padding: EdgeInsets.only(
                               right: 4,
                             ),
                             child: Text(
@@ -198,19 +197,19 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                          enabledBorder: UnderlineInputBorder(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0xff646464),
                             ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
+                          focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0xff0064ff),
                               width: 2.0,
                             ),
                           ),
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: Color(0xff0064ff),
@@ -225,10 +224,10 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  TextField(
+                  const TextField(
                     maxLength: 25,
                     decoration: InputDecoration(
                       labelText: '款项详情 (可选的)',
@@ -253,7 +252,7 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Padding(
@@ -265,13 +264,13 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
                       child: FilledButton(
                         style: FilledButton.styleFrom(
                           backgroundColor:
-                              isKeyin ? Color(0xff0064ff) : Color(0xffe9e9e9),
+                              isKeyin ? const Color(0xff0064ff) : const Color(0xffe9e9e9),
                         ),
                         onPressed: isKeyin ? saveTransaction : null,
                         child: Text(
                           '确认',
                           style: TextStyle(
-                            color: isKeyin ? Colors.white : Color(0xff969696),
+                            color: isKeyin ? Colors.white : const Color(0xff969696),
                           ),
                         ),
                       ),

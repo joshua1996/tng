@@ -71,7 +71,7 @@ class _MerchantPageState extends State<MerchantPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Merchant'),
+        title: const Text('Merchant'),
         actions: [
           IconButton(
             onPressed: () {
@@ -79,10 +79,10 @@ class _MerchantPageState extends State<MerchantPage> {
                   sortOrder == 'last_transaction' ? 'created_at' : 'last_transaction';
               _pagingController.refresh();
             },
-            icon: Icon(Icons.sort),
+            icon: const Icon(Icons.sort),
           ),
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               final controller = TextEditingController();
               showModalBottomSheet(
@@ -102,12 +102,12 @@ class _MerchantPageState extends State<MerchantPage> {
                           children: [
                             TextField(
                               controller: controller,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Merchant Name',
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             DropdownButton<String>(
@@ -152,7 +152,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                 _pagingController.refresh();
                                 Navigator.pop(context);
                               },
-                              child: Text('Add'),
+                              child: const Text('Add'),
                             ),
                           ],
                         ),
@@ -177,10 +177,10 @@ class _MerchantPageState extends State<MerchantPage> {
                     child: TextField(
                       controller: controller,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: 'Merchant Name',
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.clear),
+                            icon: const Icon(Icons.clear),
                             onPressed: () {
                               setState(() {
                                 controller.clear();
@@ -191,7 +191,7 @@ class _MerchantPageState extends State<MerchantPage> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.search),
+                    icon: const Icon(Icons.search),
                     onPressed: () {
                       _pagingController.refresh();
                     },

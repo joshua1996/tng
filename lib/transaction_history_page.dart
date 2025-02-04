@@ -12,7 +12,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           '记录',
           style: TextStyle(
             color: Colors.white,
@@ -21,7 +21,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
         actions: [
           TextButton(
             onPressed: () {},
-            child: Text(
+            child: const Text(
               '电邮',
               style: TextStyle(
                 color: Colors.white,
@@ -33,7 +33,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -41,11 +41,11 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                   color: Colors.grey.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: 1,
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                 ),
               ],
             ),
-            child: IntrinsicHeight(
+            child: const IntrinsicHeight(
               child: Row(
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -77,7 +77,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
               itemCount: 10,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     backgroundColor: Colors.blue,
                     child: Icon(
                       Icons.account_balance,
@@ -86,7 +86,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                   ),
                   title: Text('Transaction $index'),
                   subtitle: Text('Transaction $index description'),
-                  trailing: Text(
+                  trailing: const Text(
                     '\$100',
                     style: TextStyle(
                       color: Colors.green,

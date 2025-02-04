@@ -22,7 +22,7 @@ Future<void> main() async {
   runApp(
     DevicePreview(
       enabled: false,
-      builder: (context) => MainApp(),
+      builder: (context) => const MainApp(),
     ),
   );
 }

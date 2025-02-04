@@ -24,7 +24,7 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
         child: Scaffold(
           backgroundColor: Colors.white,
           bottomNavigationBar: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
             ),
             child: Padding(
@@ -34,12 +34,12 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
               ),
               child: FilledButton(
                 style: FilledButton.styleFrom(
-                  backgroundColor: Color(0xff2665fe),
+                  backgroundColor: const Color(0xff2665fe),
                 ),
                 onPressed: () {
                   Navigator.of(context).popUntil((ModalRoute.withName('/')));
                 },
-                child: Text('完成'),
+                child: const Text('完成'),
               ),
             ),
           ),
@@ -48,17 +48,17 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Center(
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Color(0xff52d865),
                         shape: BoxShape.circle,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.check_outlined,
                           color: Colors.white,
@@ -67,7 +67,7 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   RichText(
@@ -80,28 +80,28 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                         TextSpan(
                           text:
                               ' ${widget.transactions[0]['amount'].toStringAsFixed(2)}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text(
+                  const Text(
                     '已付',
                     style: TextStyle(
                       color: Color(0xff787878),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           '商家',
                           style: TextStyle(
@@ -112,7 +112,7 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                       Expanded(
                         child: Text(
                           widget.transactions[0]['merchants']['name'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.right,
@@ -120,11 +120,11 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -167,7 +167,7 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           '日期/时间',
                           style: TextStyle(
@@ -181,7 +181,7 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                             DateTime.parse(widget.transactions[0]['datetime'])
                                 .toLocal(),
                           ),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.right,
@@ -189,14 +189,14 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           '电子钱包参考编号',
                           style: TextStyle(
@@ -208,17 +208,17 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                         child: Text(
                           '${DateFormat('yyyyMMdd').format(DateTime.now())}10110000010000TNGOW3MY171353140408728',
                           textAlign: TextAlign.right,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
