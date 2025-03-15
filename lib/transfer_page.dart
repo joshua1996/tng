@@ -450,17 +450,17 @@ class _TransferPageState extends State<TransferPage>
                                       vertical: 8,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xfff6f6db),
+                                      color: const Color(0xffE5E689),
                                       border: Border.all(
-                                        color: const Color(0xffa81d22),
+                                        color: const Color(0xff99C355),
                                         width: 1.5,
                                       ),
                                       borderRadius: BorderRadius.circular(100),
                                     ),
                                     child: const Text(
-                                      '选择一个新年祝福语',
+                                      '选择祝福语',
                                       style: TextStyle(
-                                        color: Color(0xffa81d22),
+                                        color: Color(0xff255BB3),
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
