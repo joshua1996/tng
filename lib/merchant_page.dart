@@ -13,40 +13,36 @@ class _MerchantPageState extends State<MerchantPage> {
   late Future merchantFuture;
   final supabase = Supabase.instance.client;
   final controller = TextEditingController();
-  final PagingController<int, dynamic> _pagingController =
-      PagingController(firstPageKey: 1);
+  late final PagingController<int, dynamic> _pagingController =
+      PagingController(
+    fetchPage: (pageKey) => getMerchants(pageKey),
+    getNextPageKey: (state) {
+      if (state.pages != null && state.pages!.last.isEmpty) return null;
+      return (state.keys?.last ?? 0) + 1;
+    },
+  );
   String sortOrder = 'last_transaction';
 
   @override
   void initState() {
     super.initState();
-    _pagingController.addPageRequestListener(getMerchants);
-    _pagingController.addStatusListener(_showError);
+    // _pagingController.addPageRequestListener(getMerchants);
+    _pagingController.addListener(_showError);
   }
 
-  Future<void> getMerchants(int pageKey) async {
-    try {
-      final merchants = await supabase
-          .rpc('fetch_merchants_sorted_by_recent_transaction', params: {
-        'p_name': controller.text,
-        'page_number': pageKey,
-        'limit_number': 20,
-        'sort_order': sortOrder,
-      });
-      final isLastPage = merchants.isEmpty;
-      if (isLastPage) {
-        _pagingController.appendLastPage(merchants);
-      } else {
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(merchants, nextPageKey);
-      }
-    } catch (e) {
-      _pagingController.error = e;
-    }
+  Future<List<dynamic>> getMerchants(int pageKey) async {
+    final merchants = await supabase
+        .rpc('fetch_merchants_sorted_by_recent_transaction', params: {
+      'p_name': controller.text,
+      'page_number': pageKey,
+      'limit_number': 20,
+      'sort_order': sortOrder,
+    });
+    return merchants;
   }
 
-  Future<void> _showError(PagingStatus status) async {
-    if (status == PagingStatus.subsequentPageError) {
+  Future<void> _showError() async {
+    if (_pagingController.value.status == PagingStatus.subsequentPageError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(
@@ -54,7 +50,7 @@ class _MerchantPageState extends State<MerchantPage> {
           ),
           action: SnackBarAction(
             label: 'Retry',
-            onPressed: () => _pagingController.retryLastFailedRequest(),
+            onPressed: () => _pagingController.fetchNextPage(),
           ),
         ),
       );
@@ -75,8 +71,9 @@ class _MerchantPageState extends State<MerchantPage> {
         actions: [
           IconButton(
             onPressed: () {
-              sortOrder =
-                  sortOrder == 'last_transaction' ? 'created_at' : 'last_transaction';
+              sortOrder = sortOrder == 'last_transaction'
+                  ? 'created_at'
+                  : 'last_transaction';
               _pagingController.refresh();
             },
             icon: const Icon(Icons.sort),
@@ -200,91 +197,100 @@ class _MerchantPageState extends State<MerchantPage> {
               ),
             ),
             Expanded(
-              child: PagedListView<int, dynamic>.separated(
-                pagingController: _pagingController,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 16,
-                ),
-                builderDelegate: PagedChildBuilderDelegate(
-                  animateTransitions: true,
-                  itemBuilder: (context, item, index) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+              child: PagingListener(
+                  controller: _pagingController,
+                  builder: (context, state, fetchNextPage) {
+                    return PagedListView<int, dynamic>.separated(
+                      // pagingController: _pagingController,
+                      fetchNextPage: fetchNextPage,
+                      state: state,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 16,
+                      ),
+                      builderDelegate: PagedChildBuilderDelegate(
+                        animateTransitions: true,
+                        itemBuilder: (context, item, index) {
+                          return Row(
                             children: [
-                              Flexible(child: Text(item['name'])),
-                              DropdownButton<String>(
-                                value: item['type'],
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 16,
-                                style:
-                                    const TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.deepPurpleAccent,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Flexible(child: Text(item['name'])),
+                                    DropdownButton<String>(
+                                      value: item['type'],
+                                      icon: const Icon(Icons.arrow_downward),
+                                      elevation: 16,
+                                      style: const TextStyle(
+                                          color: Colors.deepPurple),
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.deepPurpleAccent,
+                                      ),
+                                      onChanged: (String? value) async {
+                                        setState(() {
+                                          item['type'] = value!;
+                                        });
+                                        await supabase
+                                            .from('merchants')
+                                            .update({'type': value}).eq(
+                                                'id', item['id']);
+                                      },
+                                      items: ['sme', 'p2p']
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    Text(item['remark'] ?? ''),
+                                  ],
                                 ),
-                                onChanged: (String? value) async {
-                                  setState(() {
-                                    item['type'] = value!;
-                                  });
-                                  await supabase.from('merchants').update(
-                                      {'type': value}).eq('id', item['id']);
-                                },
-                                items: [
-                                  'sme',
-                                  'p2p'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
                               ),
-                              Text(item['remark'] ?? ''),
+                              Checkbox(
+                                value: item['active'],
+                                onChanged: (bool? newValue) async {
+                                  // setState(() {
+                                  //   for (var i = 0;
+                                  //       i < _pagingController.itemList!.length;
+                                  //       i++) {
+                                  //     _pagingController.itemList![i]['active'] =
+                                  //         false;
+                                  //   }
+                                  //   item['active'] = newValue;
+                                  // });
+                                  await supabase
+                                      .from('merchants')
+                                      .update({'active': false}).eq(
+                                    'active',
+                                    true,
+                                  );
+                                  await supabase
+                                      .from('merchants')
+                                      .update({'active': newValue}).eq(
+                                    'id',
+                                    item['id'],
+                                  );
+                                },
+                              ),
                             ],
-                          ),
-                        ),
-                        Checkbox(
-                          value: item['active'],
-                          onChanged: (bool? newValue) async {
-                            setState(() {
-                              for (var i = 0;
-                                  i < _pagingController.itemList!.length;
-                                  i++) {
-                                _pagingController.itemList![i]['active'] =
-                                    false;
-                              }
-                              item['active'] = newValue;
-                            });
-                            await supabase
-                                .from('merchants')
-                                .update({'active': false}).eq(
-                              'active',
-                              true,
-                            );
-                            await supabase
-                                .from('merchants')
-                                .update({'active': newValue}).eq(
-                              'id',
-                              item['id'],
-                            );
-                          },
-                        ),
-                      ],
+                          );
+                        },
+                        firstPageErrorIndicatorBuilder: (context) =>
+                            CustomFirstPageError(
+                                pagingController: _pagingController),
+                        newPageErrorIndicatorBuilder: (context) =>
+                            CustomNewPageError(
+                                pagingController: _pagingController),
+                      ),
+                      separatorBuilder: (context, index) => const Divider(),
+                      // itemCount: snapshot.data.length,
                     );
-                  },
-                  firstPageErrorIndicatorBuilder: (context) =>
-                      CustomFirstPageError(pagingController: _pagingController),
-                  newPageErrorIndicatorBuilder: (context) =>
-                      CustomNewPageError(pagingController: _pagingController),
-                ),
-                separatorBuilder: (context, index) => const Divider(),
-                // itemCount: snapshot.data.length,
-              ),
+                  }),
             ),
           ],
         ),
@@ -478,7 +484,7 @@ class CustomNewPageError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: pagingController.retryLastFailedRequest,
+      onTap: pagingController.fetchNextPage,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
