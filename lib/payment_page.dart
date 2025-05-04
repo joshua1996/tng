@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tng/payment_receipt_page.dart';
@@ -71,11 +74,13 @@ class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
       transactions = await supabase.from('transactions').insert({
         'merchant_id': merchants[0]['id'],
         'amount': controller.text,
+        'reference': '${DateFormat('yyyyMMdd').format(DateTime.now())}10110000010000TNGOW3MY17135317${1000000 + Random().nextInt(9999999)}',
       }).select('*, merchants(*)');
     } else {
       transactions = await supabase.from('transactions').insert({
         'merchant_id': widget.merchant['id'],
         'amount': controller.text,
+        'reference': '${DateFormat('yyyyMMdd').format(DateTime.now())}10110000010000TNGOW3MY17135317${1000000 + Random().nextInt(9999999)}',
       }).select('*, merchants(*)');
     }
 

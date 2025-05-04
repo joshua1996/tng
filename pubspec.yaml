@@ -26,6 +26,9 @@ dependencies:
   infinite_scroll_pagination: ^5.0.0
   quick_actions: ^1.1.0
   flutter_animate: ^4.5.2
+  grouped_list: ^6.0.0
+  infinite_grouped_list: ^1.2.10
+  flutter_statusbarcolor_ns: ^0.6.0
   
 dev_dependencies:
   flutter_test:

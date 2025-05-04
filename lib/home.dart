@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tng/gofinance_page.dart';
 import 'package:tng/merchant_page.dart';
 import 'package:tng/models/shortcut.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:tng/payment_page.dart';
 import 'package:tng/scan_page.dart';
-import 'package:tng/transaction_history_page.dart';
 import 'package:tng/transfer_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -371,23 +371,28 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffF8F9FD),
       extendBody: true,
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
       bottomNavigationBar: Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom,
+        ),
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
         ),
         child: Row(
           children: [
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color(0xff0064ff),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
+                  border: Border(
+                    top: BorderSide(
+                      color: Color(0xff2962F7),
+                      width: 2,
+                    ),
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(
@@ -397,13 +402,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.home_outlined,
-                      color: Colors.white,
+                      Icons.home_filled,
+                      color: Color(0xff2962F7),
                     ),
                     Text(
                       '首页',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Color(0xff2962F7),
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -437,26 +442,32 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      'assets/images/gold.png',
-                      height: 24,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ScanPage(),
                     ),
-                    const Text(
-                      'GOfinance',
-                      style: TextStyle(
-                        color: Color(0xff6d6d6d),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                  );
+                },
+                child: Container(
+                  height: 48,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Color(0xff2052CD),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/scan.png',
+                        width: 32,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -511,342 +522,338 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).viewPadding.top,
-              color: const Color(
-                0xff005abe,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              color: const Color(
-                0xff005abe,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image(
-                            image:
-                                const AssetImage('assets/images/country_select.png'),
-                            width: MediaQuery.of(context).size.width * 0.7,
-                          ),
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              goToPaymentPage();
-                            },
-                            onLongPress: () {
-                              goToTransferPage();
-                            },
-                            child: badges.Badge(
-                              position: badges.BadgePosition.custom(
-                                top: 0,
-                                end: 0,
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffcdeffc),
-                                  borderRadius: BorderRadius.circular(100),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                color: const Color(
+                  0xff005abe,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image(
+                              image: const AssetImage(
+                                  'assets/images/country_select.png'),
+                              width: MediaQuery.of(context).size.width * 0.7,
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                goToPaymentPage();
+                              },
+                              onLongPress: () {
+                                goToTransferPage();
+                              },
+                              child: badges.Badge(
+                                position: badges.BadgePosition.custom(
+                                  top: 0,
+                                  end: 0,
                                 ),
-                                child: const Icon(
-                                  Icons.person_outlined,
-                                  color: Color(0xff2a62f6),
-                                  size: 30,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xffcdeffc),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: const Icon(
+                                    Icons.person_outlined,
+                                    color: Color(0xff2a62f6),
+                                    size: 30,
+                                  ),
                                 ),
                               ),
                             ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showBalance();
+                          },
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/walletsafe.jpg',
+                                width: 20,
+                              ),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              const Text(
+                                'RM 559.06',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 26,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MerchantPage(),
+                                    ),
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.remove_red_eye_outlined,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          '查看余额详情',
+                          style: TextStyle(
+                            color: Color(0xff98b7ee),
+                            fontSize: 12,
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Color(0xff98b7ee),
+                          size: 17,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 130,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: const Text(
+                              '+ 充值',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const GofinancePage(),
+                              ),
+                            );
+                          },
+                          child: const Row(
+                            children: [
+                              Text(
+                                '交易记录',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_right,
+                                color: Colors.white,
+                                size: 17,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: 44,
+                    decoration: const BoxDecoration(
+                        color: Color(0xff005abe),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(16.0),
+                          bottomRight: Radius.circular(16.0),
+                        )),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Card(
+                      surfaceTintColor: Colors.white,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          MainButton(
+                            image: 'apply',
+                            title: '申请',
+                          ),
+                          MainButton(
+                            image: 'flow',
+                            title: '资金流动',
+                          ),
+                          MainButton(
+                            image: 'transfer',
+                            title: '转账',
+                          ),
+                          MainButton(
+                            image: 'card',
+                            title: '卡包',
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 56,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: SizedBox(
+                  height: 66,
+                  child: Row(
+                    children: [
+                      SecondButton(
+                        image: 'go_plus',
+                        title: 'GO+',
+                        subtitle: '日收益 >3.45%*',
+                        badge: '',
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      SecondButton(
+                        image: 'go_reward',
+                        title: 'GO rewards',
+                        subtitle: '',
+                        badge: '1 个奖励',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: Image.asset('assets/images/banner.jpg'),
+              ),
+              GridView.count(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                crossAxisCount: 4,
+                childAspectRatio: 1 / .9,
+                children: List.generate(shortcutButtons.length, (index) {
+                  ShortcutButton shortcutButton = shortcutButtons[index];
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Image.asset(
+                        'assets/images/${shortcutButton.image}.jpg',
+                        width: 32,
                       ),
                       const SizedBox(
                         height: 8,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          showBalance();
-                        },
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/walletsafe.jpg',
-                              width: 20,
-                            ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            const Text(
-                              'RM 559.06',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 26,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const MerchantPage(),
-                                  ),
-                                );
-                              },
-                              child: const Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    children: [
                       Text(
-                        '查看余额详情',
-                        style: TextStyle(
-                          color: Color(0xff98b7ee),
+                        shortcutButton.title,
+                        style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),
-                      Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Color(0xff98b7ee),
-                        size: 17,
-                      ),
                     ],
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 130,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text(
-                            '+ 充值',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const TransactionHistoryPage(),
-                            ),
-                          );
-                        },
-                        child: const Row(
-                          children: [
-                            Text(
-                              '交易记录',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_right,
-                              color: Colors.white,
-                              size: 17,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                  );
+                }),
               ),
-            ),
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: 44,
-                  decoration: const BoxDecoration(
-                      color: Color(0xff005abe),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(16.0),
-                        bottomRight: Radius.circular(16.0),
-                      )),
-                ),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Card(
-                    surfaceTintColor: Colors.white,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        MainButton(
-                          image: 'scan',
-                          title: '扫码',
-                        ),
-                        MainButton(
-                          image: 'pay',
-                          title: '付款',
-                        ),
-                        MainButton(
-                          image: 'transfer',
-                          title: '转账',
-                        ),
-                        MainButton(
-                          image: 'tng',
-                          title: 'TNG 卡',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 56,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
+              const SizedBox(
+                height: 16,
               ),
-              child: SizedBox(
-                height: 66,
-                child: Row(
+              Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xfff0ce46),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SecondButton(
-                      image: 'go_plus',
-                      title: 'GO+',
-                      subtitle: '日收益 >3.45%*',
-                      badge: '',
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        '特选',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     SizedBox(
-                      width: 8,
-                    ),
-                    SecondButton(
-                      image: 'go_reward',
-                      title: 'GO rewards',
-                      subtitle: '',
-                      badge: '1 个奖励',
-                    ),
+                      height: 100,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemBuilder: (context, index) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset('assets/images/banner.jpg'),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            width: 16,
+                          );
+                        },
+                        itemCount: 10,
+                      ),
+                    )
                   ],
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              child: Image.asset('assets/images/banner.jpg'),
-            ),
-            GridView.count(
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              crossAxisCount: 4,
-              childAspectRatio: 1 / .9,
-              children: List.generate(shortcutButtons.length, (index) {
-                ShortcutButton shortcutButton = shortcutButtons[index];
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Image.asset(
-                      'assets/images/${shortcutButton.image}.jpg',
-                      width: 32,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      shortcutButton.title,
-                      style: const TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                );
-              }),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              decoration: const BoxDecoration(
-                color: Color(0xfff0ce46),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      '特选',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemBuilder: (context, index) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset('assets/images/banner.jpg'),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          width: 16,
-                        );
-                      },
-                      itemCount: 10,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -876,11 +883,11 @@ class MainButton extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(
-            height: 16,
+            height: 12,
           ),
           Image.asset(
-            'assets/images/$image.jpg',
-            width: 34,
+            'assets/images/$image.png',
+            width: 28,
           ),
           const SizedBox(
             height: 8,

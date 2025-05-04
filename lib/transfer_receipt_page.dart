@@ -26,7 +26,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
           bottomNavigationBar: Container(
             decoration: BoxDecoration(color: Colors.white, boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withValues(alpha: 0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(0, 3), // changes position of shadow
@@ -219,7 +219,7 @@ class _TransferReceiptPageState extends State<TransferReceiptPage> {
                   //     ),
                   //     Expanded(
                   //       child: Text(
-                  //         '${DateFormat('yyyyMMdd').format(DateTime.now())}10110000010000TNGOW3MY171353140408728',
+                  //         '${DateFormat('yyyyMMdd').format(DateTime.now())}10110000010000TNGOW3MY171353174408728',
                   //         textAlign: TextAlign.right,
                   //         style: TextStyle(
                   //           fontWeight: FontWeight.w600,

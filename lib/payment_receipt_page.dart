@@ -206,7 +206,7 @@ class _PaymentReceiptPageState extends State<PaymentReceiptPage> {
                       ),
                       Expanded(
                         child: Text(
-                          '${DateFormat('yyyyMMdd').format(DateTime.now())}10110000010000TNGOW3MY171353140408728',
+                          '${widget.transactions[0]['reference'] ?? 'N/A'}',
                           textAlign: TextAlign.right,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
