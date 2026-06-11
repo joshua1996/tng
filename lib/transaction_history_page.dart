@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:infinite_grouped_list/infinite_grouped_list.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -362,7 +361,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
               groupCreator: (dateTime) {
                 return DateFormat('MMM yyyy').format(dateTime);
               },
-              seperatorBuilder: (p0) {
+              separatorBuilder: (p0) {
                 return const Padding(
                   padding: EdgeInsets.only(
                     left: 16,
