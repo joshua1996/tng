@@ -546,7 +546,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Image.asset(
                     'assets/images/IMG_20260702_2241000.jpg',
-                    fit: BoxFit.contain,
                   ),
                   SafeArea(
                     child: Padding(
@@ -555,56 +554,138 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Column(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              top: kToolbarHeight,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: kToolbarHeight - 4,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
+                                const Column(
                                   mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
-                                        Text('总余额'),
-                                        Icon(Icons.remove_red_eye_outlined),
+                                        Text(
+                                          '总余额',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Icon(
+                                          Icons.remove_red_eye_outlined,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
                                       ],
+                                    ),
+                                    SizedBox(
+                                      height: 8,
                                     ),
                                     Row(
                                       children: [
-                                        Text('RM 100'),
-                                        Icon(Icons.remove_red_eye_outlined),
+                                        Text(
+                                          'RM 4,946.24',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Icon(
+                                          Icons.verified_user_sharp,
+                                          color: Colors.white,
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
-                                Text('充值'),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
                                 Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.amber,
+                                  padding: const EdgeInsets.only(
+                                    top: 4,
+                                    left: 8,
+                                    bottom: 4,
                                   ),
-                                  child: Column(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
-                                      Image.asset(
-                                          'assets/images/go_pinjam.jpg'),
-                                      const Text('data'),
+                                      Text(
+                                        '充值',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 4,
+                                      ),
+                                      Icon(
+                                        Icons.chevron_right_outlined,
+                                        color: Colors.white,
+                                      ),
                                     ],
                                   ),
                                 ),
-                                const Text('data'),
-                                const Text('data'),
-                                const Text('data'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withValues(alpha: 0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(
+                                    0,
+                                    3,
+                                  ), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                MainButton(
+                                  image: 'gofinance',
+                                  title: 'GOfinance',
+                                  color: 0xffFEF9E6,
+                                ),
+                                MainButton(
+                                    image: 'food',
+                                    title: 'Food & Delivery',
+                                    color: 0xffFEF7E7),
+                                MainButton(
+                                  image: 'bill',
+                                  title: '账单',
+                                  color: 0xffF7F1FD,
+                                ),
+                                MainButton(
+                                  image: 'transport',
+                                  title: '交通',
+                                  color: 0xffEAF7FF,
+                                ),
                               ],
                             ),
                           ),
@@ -618,6 +699,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SafeArea(
             child: Container(
+              padding: const EdgeInsets.only(
+                top: 4,
+              ),
               height: kToolbarHeight - 24,
               color: Colors.blue.withValues(alpha: _appBarOpacity),
               child: Center(
@@ -626,6 +710,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     horizontal: 16,
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Stack(
                         children: [
@@ -634,41 +719,80 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'assets/images/IMG_20260701_230739.png'),
                             width: 100,
                           ),
-                          Row(
-                            children: [
-                              CountryFlag.fromCountryCode(
-                                'MY',
-                                theme: const ImageTheme(width: 16, height: 16),
-                              ),
-                              const Text(
-                                'MY',
-                                style: TextStyle(
-                                  color: Colors.white,
+                          Positioned.fill(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  width: 12,
                                 ),
-                              ),
-                              const Icon(Icons.arrow_drop_down_sharp),
-                            ],
+                                CountryFlag.fromCountryCode(
+                                  'MY',
+                                  theme:
+                                      const ImageTheme(width: 16, height: 12),
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                const Text(
+                                  'MY',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.keyboard_arrow_down_sharp,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(
-                        width: 16,
+                        width: 8,
                       ),
                       // full width search bar
                       Expanded(
                         child: Container(
+                          height: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
                           ),
                           child: const Row(
                             children: [
                               Icon(
                                 Icons.search,
                                 color: Colors.grey,
+                                size: 16,
                               ),
-                              Text('探索'),
-                              Text('增长财富')
+                              Text(
+                                '探索',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Color(0xff2963F5),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                '增长财富',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff787878),
+                                  fontSize: 12,
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -1101,45 +1225,76 @@ class _HomeScreenState extends State<HomeScreen> {
 class MainButton extends StatelessWidget {
   final String image;
   final String title;
+  final int color;
   const MainButton({
     super.key,
     required this.image,
     required this.title,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const ScanPage(),
-          ),
-        );
-      },
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 12,
-          ),
-          Image.asset(
-            'assets/images/$image.png',
-            width: 28,
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const ScanPage(),
             ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-        ],
+          );
+        },
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Color(color),
+                borderRadius: BorderRadius.circular(
+                  16,
+                ),
+              ),
+              height: 48,
+              width: 48,
+              child: Image.asset('assets/images/$image.png'),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                overflow: TextOverflow.ellipsis,
+              ),
+              // maxLines: 1,
+              // textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+
+        // Column(
+        //   children: [
+        //     const SizedBox(
+        //       height: 12,
+        //     ),
+        //     Image.asset(
+        //       'assets/images/$image.png',
+        //       width: 28,
+        //     ),
+        //     const SizedBox(
+        //       height: 8,
+        //     ),
+        //     Text(
+        //       title,
+        //       style: const TextStyle(
+        //         fontSize: 12,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       height: 12,
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }
