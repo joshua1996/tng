@@ -68,53 +68,56 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 
-  List<ShortcutButton> shortcutButtons = [
+  List<ShortcutButton> recommendServices = [
+    ShortcutButton(
+      title: 'Mission',
+      image: 'mission',
+    ),
+    ShortcutButton(
+      title: 'Get Sim',
+      image: '5g',
+    ),
     ShortcutButton(
       title: '收费站',
       image: 'toll',
     ),
     ShortcutButton(
-      title: '停车费',
-      image: 'parking',
+      title: 'PETRONA SETEL',
+      image: 'setel',
+    ),
+  ];
+
+  List<ShortcutButton> shortcutButtons = [
+    ShortcutButton(
+      title: 'TNG卡',
+      image: 'touchngo',
     ),
     ShortcutButton(
-      title: 'GOpinjam',
-      image: 'go_pinjam',
+      title: '每日省钱',
+      image: 'lazada',
     ),
     ShortcutButton(
-      title: 'GOprotect',
-      image: 'go_protect',
+      title: 'CardMatch',
+      image: 'cardmatch',
     ),
     ShortcutButton(
-      title: '手机预付',
-      image: 'topup',
-    ),
-    ShortcutButton(
-      title: '账单缴费',
-      image: 'bill',
-    ),
-    ShortcutButton(
-      title: 'GOinvest',
-      image: 'go_invest',
-    ),
-    ShortcutButton(
-      title: 'ASNB',
-      image: 'asnb',
-    ),
-    ShortcutButton(
-      title: 'CTOS Report',
-      image: 'ctos',
-    ),
-    ShortcutButton(
-      title: 'A+ Rewards',
-      image: 'a_plus_reward',
-    ),
-    ShortcutButton(
-      title: '商家',
+      title: '我的业务',
       image: 'merchant',
     ),
     ShortcutButton(
-      title: '其他',
+      title: '投资',
+      image: 'investment',
+    ),
+    ShortcutButton(
+      title: 'CashLoan',
+      image: 'cashloan',
+    ),
+    ShortcutButton(
+      title: '更多',
+      image: 'more',
+    ),
+    ShortcutButton(
+      title: '更多',
       image: 'more',
     ),
   ];
@@ -907,13 +910,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   lineWidth: 6.0,
                                                   backgroundWidth: 3.0,
                                                   percent: 0.80,
-                                                  center: Icon(
+                                                  center: const Icon(
                                                     Icons.local_gas_station,
                                                     color: Color(0xff2962F7),
                                                     size: 20,
                                                   ),
                                                   progressColor:
-                                                      Color(0xff2962F7),
+                                                      const Color(0xff2962F7),
                                                   circularStrokeCap:
                                                       CircularStrokeCap.round,
                                                 ),
@@ -928,6 +931,83 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '推荐服务',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 4,
+                            children: recommendServices
+                                .map((e) => RecommendedServiceButton(
+                                      image: e.image,
+                                      title: e.title,
+                                    ))
+                                .toList(),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          const Row(
+                            children: [
+                              Text(
+                                '我的服务',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                '编辑',
+                                style: TextStyle(
+                                  color: Color(0xff2B63EC),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 4,
+                            children: shortcutButtons
+                                .map((e) => RecommendedServiceButton(
+                                      image: e.image,
+                                      title: e.title,
+                                    ))
+                                .toList(),
+                          ),
+                          const Row(
+                            children: [
+                              Text('GOfinance'),
+                              Text('前往'),
+                            ],
+                          ),
+                          const Text('轻松增长并守护您的财富'),
+                          for (int i = 0; i < 10; i++) Text('Item $i'),
                         ],
                       ),
                     ),
@@ -940,9 +1020,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               padding: const EdgeInsets.only(
                 top: 4,
+                bottom: 8,
               ),
-              height: kToolbarHeight - 24,
-              color: Colors.blue.withValues(alpha: _appBarOpacity),
+              height: kToolbarHeight - 16,
+              color: const Color(0xff015ABE).withValues(alpha: _appBarOpacity),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -1618,6 +1699,40 @@ class SecondButton extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class RecommendedServiceButton extends StatelessWidget {
+  final String image;
+  final String title;
+  const RecommendedServiceButton({
+    super.key,
+    required this.image,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Image.asset(
+          'assets/images/$image.png',
+          height: 38,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Text(
+          title,
+          style: const TextStyle(
+            overflow: TextOverflow.ellipsis,
+            fontSize: 12,
+          ),
+          maxLines: 1,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }
