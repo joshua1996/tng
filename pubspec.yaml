@@ -29,6 +29,7 @@ dependencies:
   grouped_list: ^6.0.0
   infinite_grouped_list: ^1.2.10
   flutter_statusbarcolor_ns: ^0.6.0
+  country_flags: ^4.1.2
   
 dev_dependencies:
   flutter_test:

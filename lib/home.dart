@@ -1,3 +1,4 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,9 +20,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final supabase = Supabase.instance.client;
 
+  final ScrollController _scrollController = ScrollController();
+  double _appBarOpacity = 0.0;
+
   @override
   void initState() {
     super.initState();
+
+    _scrollController.addListener(() {
+      // 设定滚动 100 像素时背景色完全显示
+      double offset = _scrollController.offset;
+      double newOpacity = (offset / 100.0).clamp(0.0, 1.0);
+
+      if (newOpacity != _appBarOpacity) {
+        setState(() {
+          _appBarOpacity = newOpacity;
+        });
+      }
+    });
 
     const QuickActions quickActions = QuickActions();
     quickActions.initialize((String shortcutType) {
@@ -373,9 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xffF8F9FD),
       extendBody: true,
-      appBar: AppBar(
-        toolbarHeight: 0,
-      ),
+      extendBodyBehindAppBar: true,
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).padding.bottom,
@@ -522,218 +536,77 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
+      body: Stack(
+        children: [
+          ListView(
+            controller: _scrollController,
+            padding: EdgeInsets.zero,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                color: const Color(
-                  0xff005abe,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image(
-                              image: const AssetImage(
-                                  'assets/images/country_select.png'),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                            ),
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                goToPaymentPage();
-                              },
-                              onLongPress: () {
-                                goToTransferPage();
-                              },
-                              child: badges.Badge(
-                                position: badges.BadgePosition.custom(
-                                  top: 0,
-                                  end: 0,
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xffcdeffc),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: const Icon(
-                                    Icons.person_outlined,
-                                    color: Color(0xff2a62f6),
-                                    size: 30,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBalance();
-                          },
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/walletsafe.jpg',
-                                width: 20,
-                              ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              const Text(
-                                'RM 559.06',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 26,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MerchantPage(),
-                                    ),
-                                  );
-                                },
-                                child: const Icon(
-                                  Icons.remove_red_eye_outlined,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Row(
-                      children: [
-                        Text(
-                          '查看余额详情',
-                          style: TextStyle(
-                            color: Color(0xff98b7ee),
-                            fontSize: 12,
-                          ),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_right,
-                          color: Color(0xff98b7ee),
-                          size: 17,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 130,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: const Text(
-                              '+ 充值',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 24,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const GofinancePage(),
-                              ),
-                            );
-                          },
-                          child: const Row(
-                            children: [
-                              Text(
-                                '交易记录',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white,
-                                size: 17,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
               Stack(
-                clipBehavior: Clip.none,
                 children: [
-                  Container(
-                    height: 44,
-                    decoration: const BoxDecoration(
-                        color: Color(0xff005abe),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(16.0),
-                          bottomRight: Radius.circular(16.0),
-                        )),
+                  Image.asset(
+                    'assets/images/IMG_20260702_2241000.jpg',
+                    fit: BoxFit.contain,
                   ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Card(
-                      surfaceTintColor: Colors.white,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      margin: const EdgeInsets.symmetric(
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                       ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      child: Column(
                         children: [
-                          MainButton(
-                            image: 'apply',
-                            title: '申请',
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              top: kToolbarHeight,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text('总余额'),
+                                        Icon(Icons.remove_red_eye_outlined),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text('RM 100'),
+                                        Icon(Icons.remove_red_eye_outlined),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Text('充值'),
+                              ],
+                            ),
                           ),
-                          MainButton(
-                            image: 'flow',
-                            title: '资金流动',
-                          ),
-                          MainButton(
-                            image: 'transfer',
-                            title: '转账',
-                          ),
-                          MainButton(
-                            image: 'card',
-                            title: '卡包',
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.amber,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                          'assets/images/go_pinjam.jpg'),
+                                      const Text('data'),
+                                    ],
+                                  ),
+                                ),
+                                const Text('data'),
+                                const Text('data'),
+                                const Text('data'),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -741,121 +614,486 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 56,
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: SizedBox(
-                  height: 66,
+            ],
+          ),
+          SafeArea(
+            child: Container(
+              height: kToolbarHeight - 24,
+              color: Colors.blue.withValues(alpha: _appBarOpacity),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
                   child: Row(
                     children: [
-                      SecondButton(
-                        image: 'go_plus',
-                        title: 'GO+',
-                        subtitle: '日收益 >3.45%*',
-                        badge: '',
+                      Stack(
+                        children: [
+                          const Image(
+                            image: AssetImage(
+                                'assets/images/IMG_20260701_230739.png'),
+                            width: 100,
+                          ),
+                          Row(
+                            children: [
+                              CountryFlag.fromCountryCode(
+                                'MY',
+                                theme: const ImageTheme(width: 16, height: 16),
+                              ),
+                              const Text(
+                                'MY',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Icon(Icons.arrow_drop_down_sharp),
+                            ],
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 8,
+                      const SizedBox(
+                        width: 16,
                       ),
-                      SecondButton(
-                        image: 'go_reward',
-                        title: 'GO rewards',
-                        subtitle: '',
-                        badge: '1 个奖励',
+                      // full width search bar
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              ),
+                              Text('探索'),
+                              Text('增长财富')
+                            ],
+                          ),
+                        ),
                       ),
+                      // ... 个人头像 GestureDetector
                     ],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: Image.asset('assets/images/banner.jpg'),
-              ),
-              GridView.count(
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                crossAxisCount: 4,
-                childAspectRatio: 1 / .9,
-                children: List.generate(shortcutButtons.length, (index) {
-                  ShortcutButton shortcutButton = shortcutButtons[index];
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Image.asset(
-                        'assets/images/${shortcutButton.image}.jpg',
-                        width: 32,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        shortcutButton.title,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xfff0ce46),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        '特选',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemBuilder: (context, index) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset('assets/images/banner.jpg'),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(
-                            width: 16,
-                          );
-                        },
-                        itemCount: 10,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
+
+      // SafeArea(
+      //   child: CustomScrollView(
+      //     controller: _scrollController,
+      //     slivers: [
+      //       SliverAppBar(
+      //         pinned: true, // 关键属性：向上滚动时固定在顶部
+      //         backgroundColor:
+      //             const Color(0xff005abe).withValues(alpha: _appBarOpacity),
+      //         elevation: 0,
+      //         titleSpacing: 16,
+      //         title: Row(
+      //           children: [
+      //             Stack(
+      //               children: [
+      //                 const Image(
+      //                   image:
+      //                       AssetImage('assets/images/IMG_20260701_230739.png'),
+      //                   width: 100,
+      //                 ),
+      //                 Row(
+      //                   children: [
+      //                     CountryFlag.fromCountryCode(
+      //                       'MY',
+      //                       theme: const ImageTheme(width: 16, height: 16),
+      //                     ),
+      //                     const Text(
+      //                       'MY',
+      //                       style: TextStyle(
+      //                         color: Colors.white,
+      //                       ),
+      //                     ),
+      //                     const Icon(Icons.arrow_drop_down_sharp),
+      //                   ],
+      //                 ),
+      //               ],
+      //             ),
+      //             const SizedBox(
+      //               width: 16,
+      //             ),
+      //             // full width search bar
+      //             Expanded(
+      //               child: Container(
+      //                 decoration: BoxDecoration(
+      //                   color: Colors.white,
+      //                   borderRadius: BorderRadius.circular(10),
+      //                 ),
+      //                 child: const Row(
+      //                   children: [
+      //                     Icon(
+      //                       Icons.search,
+      //                       color: Colors.grey,
+      //                     ),
+      //                     Text('探索'),
+      //                     Text('增长财富')
+      //                   ],
+      //                 ),
+      //               ),
+      //             ),
+      //             // ... 个人头像 GestureDetector
+      //           ],
+      //         ),
+      //       ),
+      //       SliverList(
+      //         delegate: SliverChildListDelegate([
+      //           Image.asset('assets/images/IMG_20260702_2241000.jpg'),
+      //           const Text('data'),
+      //           const SizedBox(
+      //             height: 1000,
+      //           ),
+      //           const Text('data')
+      //           // 这里放置钱包余额以及其他可滚动的内容
+      //         ]),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+
+      // body: SafeArea(
+      //   child: SingleChildScrollView(
+      //     child: Column(
+      //       children: [
+      //         Container(
+      //           padding: const EdgeInsets.symmetric(
+      //             horizontal: 16,
+      //             vertical: 8,
+      //           ),
+      //           color: const Color(
+      //             0xff005abe,
+      //           ),
+      //           child: Column(
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 children: [
+      //                   Row(
+      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                     children: [
+      //                       Image(
+      //                         image: const AssetImage(
+      //                             'assets/images/country_select.png'),
+      //                         width: MediaQuery.of(context).size.width * 0.7,
+      //                       ),
+      //                       GestureDetector(
+      //                         behavior: HitTestBehavior.opaque,
+      //                         onTap: () {
+      //                           goToPaymentPage();
+      //                         },
+      //                         onLongPress: () {
+      //                           goToTransferPage();
+      //                         },
+      //                         child: badges.Badge(
+      //                           position: badges.BadgePosition.custom(
+      //                             top: 0,
+      //                             end: 0,
+      //                           ),
+      //                           child: Container(
+      //                             padding: const EdgeInsets.all(4),
+      //                             decoration: BoxDecoration(
+      //                               color: const Color(0xffcdeffc),
+      //                               borderRadius: BorderRadius.circular(100),
+      //                             ),
+      //                             child: const Icon(
+      //                               Icons.person_outlined,
+      //                               color: Color(0xff2a62f6),
+      //                               size: 30,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   const SizedBox(
+      //                     height: 8,
+      //                   ),
+      //                   GestureDetector(
+      //                     onTap: () {
+      //                       showBalance();
+      //                     },
+      //                     child: Row(
+      //                       children: [
+      //                         Image.asset(
+      //                           'assets/images/walletsafe.jpg',
+      //                           width: 20,
+      //                         ),
+      //                         const SizedBox(
+      //                           width: 16,
+      //                         ),
+      //                         const Text(
+      //                           'RM 559.06',
+      //                           style: TextStyle(
+      //                             color: Colors.white,
+      //                             fontWeight: FontWeight.bold,
+      //                             fontSize: 26,
+      //                           ),
+      //                         ),
+      //                         const SizedBox(
+      //                           width: 16,
+      //                         ),
+      //                         GestureDetector(
+      //                           onTap: () {
+      //                             Navigator.of(context).push(
+      //                               MaterialPageRoute(
+      //                                 builder: (context) =>
+      //                                     const MerchantPage(),
+      //                               ),
+      //                             );
+      //                           },
+      //                           child: const Icon(
+      //                             Icons.remove_red_eye_outlined,
+      //                             color: Colors.white,
+      //                           ),
+      //                         ),
+      //                       ],
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //               const Row(
+      //                 children: [
+      //                   Text(
+      //                     '查看余额详情',
+      //                     style: TextStyle(
+      //                       color: Color(0xff98b7ee),
+      //                       fontSize: 12,
+      //                     ),
+      //                   ),
+      //                   Icon(
+      //                     Icons.keyboard_arrow_right,
+      //                     color: Color(0xff98b7ee),
+      //                     size: 17,
+      //                   ),
+      //                 ],
+      //               ),
+      //               const SizedBox(
+      //                 height: 4,
+      //               ),
+      //               Row(
+      //                 children: [
+      //                   SizedBox(
+      //                     width: 130,
+      //                     child: ElevatedButton(
+      //                       onPressed: () {},
+      //                       child: const Text(
+      //                         '+ 充值',
+      //                         style: TextStyle(
+      //                           fontSize: 12,
+      //                           fontWeight: FontWeight.w600,
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   ),
+      //                   const SizedBox(
+      //                     width: 24,
+      //                   ),
+      //                   GestureDetector(
+      //                     onTap: () {
+      //                       Navigator.of(context).push(
+      //                         MaterialPageRoute(
+      //                           builder: (context) => const GofinancePage(),
+      //                         ),
+      //                       );
+      //                     },
+      //                     child: const Row(
+      //                       children: [
+      //                         Text(
+      //                           '交易记录',
+      //                           style: TextStyle(
+      //                             color: Colors.white,
+      //                             fontWeight: FontWeight.bold,
+      //                             fontSize: 12,
+      //                           ),
+      //                         ),
+      //                         Icon(
+      //                           Icons.keyboard_arrow_right,
+      //                           color: Colors.white,
+      //                           size: 17,
+      //                         ),
+      //                       ],
+      //                     ),
+      //                   )
+      //                 ],
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //         Stack(
+      //           clipBehavior: Clip.none,
+      //           children: [
+      //             Container(
+      //               height: 44,
+      //               decoration: const BoxDecoration(
+      //                   color: Color(0xff005abe),
+      //                   borderRadius: BorderRadius.only(
+      //                     bottomLeft: Radius.circular(16.0),
+      //                     bottomRight: Radius.circular(16.0),
+      //                   )),
+      //             ),
+      //             Positioned(
+      //               top: 0,
+      //               left: 0,
+      //               right: 0,
+      //               child: Card(
+      //                 surfaceTintColor: Colors.white,
+      //                 color: Colors.white,
+      //                 shape: RoundedRectangleBorder(
+      //                   borderRadius: BorderRadius.circular(8.0),
+      //                 ),
+      //                 margin: const EdgeInsets.symmetric(
+      //                   horizontal: 16,
+      //                 ),
+      //                 child: const Row(
+      //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //                   children: [
+      //                     MainButton(
+      //                       image: 'apply',
+      //                       title: '申请',
+      //                     ),
+      //                     MainButton(
+      //                       image: 'flow',
+      //                       title: '资金流动',
+      //                     ),
+      //                     MainButton(
+      //                       image: 'transfer',
+      //                       title: '转账',
+      //                     ),
+      //                     MainButton(
+      //                       image: 'card',
+      //                       title: '卡包',
+      //                     ),
+      //                   ],
+      //                 ),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //         const SizedBox(
+      //           height: 56,
+      //         ),
+      //         const Padding(
+      //           padding: EdgeInsets.symmetric(
+      //             horizontal: 16,
+      //           ),
+      //           child: SizedBox(
+      //             height: 66,
+      //             child: Row(
+      //               children: [
+      //                 SecondButton(
+      //                   image: 'go_plus',
+      //                   title: 'GO+',
+      //                   subtitle: '日收益 >3.45%*',
+      //                   badge: '',
+      //                 ),
+      //                 SizedBox(
+      //                   width: 8,
+      //                 ),
+      //                 SecondButton(
+      //                   image: 'go_reward',
+      //                   title: 'GO rewards',
+      //                   subtitle: '',
+      //                   badge: '1 个奖励',
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ),
+      //         const SizedBox(
+      //           height: 16,
+      //         ),
+      //         Padding(
+      //           padding: const EdgeInsets.symmetric(
+      //             horizontal: 16,
+      //           ),
+      //           child: Image.asset('assets/images/banner.jpg'),
+      //         ),
+      //         GridView.count(
+      //           padding: EdgeInsets.zero,
+      //           physics: const NeverScrollableScrollPhysics(),
+      //           shrinkWrap: true,
+      //           crossAxisCount: 4,
+      //           childAspectRatio: 1 / .9,
+      //           children: List.generate(shortcutButtons.length, (index) {
+      //             ShortcutButton shortcutButton = shortcutButtons[index];
+      //             return Column(
+      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //               children: [
+      //                 const SizedBox(
+      //                   height: 16,
+      //                 ),
+      //                 Image.asset(
+      //                   'assets/images/${shortcutButton.image}.jpg',
+      //                   width: 32,
+      //                 ),
+      //                 const SizedBox(
+      //                   height: 8,
+      //                 ),
+      //                 Text(
+      //                   shortcutButton.title,
+      //                   style: const TextStyle(
+      //                     fontSize: 12,
+      //                   ),
+      //                 ),
+      //               ],
+      //             );
+      //           }),
+      //         ),
+      //         const SizedBox(
+      //           height: 16,
+      //         ),
+      //         Container(
+      //           decoration: const BoxDecoration(
+      //             color: Color(0xfff0ce46),
+      //           ),
+      //           child: Column(
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               const Padding(
+      //                 padding: EdgeInsets.all(16.0),
+      //                 child: Text(
+      //                   '特选',
+      //                   style: TextStyle(
+      //                     fontWeight: FontWeight.bold,
+      //                   ),
+      //                 ),
+      //               ),
+      //               SizedBox(
+      //                 height: 100,
+      //                 child: ListView.separated(
+      //                   scrollDirection: Axis.horizontal,
+      //                   padding: const EdgeInsets.symmetric(horizontal: 16),
+      //                   itemBuilder: (context, index) {
+      //                     return ClipRRect(
+      //                       borderRadius: BorderRadius.circular(8),
+      //                       child: Image.asset('assets/images/banner.jpg'),
+      //                     );
+      //                   },
+      //                   separatorBuilder: (context, index) {
+      //                     return const SizedBox(
+      //                       width: 16,
+      //                     );
+      //                   },
+      //                   itemCount: 10,
+      //                 ),
+      //               )
+      //             ],
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
