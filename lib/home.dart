@@ -1,5 +1,7 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -113,8 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
       image: 'cashloan',
     ),
     ShortcutButton(
-      title: '更多',
-      image: 'more',
+      title: '手机预付',
+      image: 'topup',
     ),
     ShortcutButton(
       title: '更多',
@@ -394,737 +396,823 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color(0xffF8F9FD),
       extendBody: true,
       extendBodyBehindAppBar: true,
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom,
-        ),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color(0xff2962F7),
-                      width: 2,
-                    ),
-                  ),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                ),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.home_filled,
-                      color: Color(0xff2962F7),
-                    ),
-                    Text(
-                      '首页',
-                      style: TextStyle(
-                        color: Color(0xff2962F7),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                ),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.shopping_cart_outlined,
-                      color: Color(0xff6d6d6d),
-                    ),
-                    Text(
-                      'eShop',
-                      style: TextStyle(
-                        color: Color(0xff6d6d6d),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ScanPage(),
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 48,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Color(0xff2052CD),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/scan.png',
-                        width: 32,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                ),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.redeem_outlined,
-                      color: Color(0xff6d6d6d),
-                    ),
-                    Text(
-                      'GOrewards',
-                      style: TextStyle(
-                        color: Color(0xff6d6d6d),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                ),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      color: Color(0xff6d6d6d),
-                    ),
-                    Text(
-                      'Near Me',
-                      style: TextStyle(
-                        color: Color(0xff6d6d6d),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Stack(
-        children: [
-          ListView(
-            controller: _scrollController,
-            padding: EdgeInsets.zero,
+      appBar: AppBar(
+        toolbarHeight: 40,
+        backgroundColor:
+            const Color(0xff015ABE).withValues(alpha: _appBarOpacity),
+        flexibleSpace: Padding(
+          padding: EdgeInsets.only(
+            top: MediaQuery.paddingOf(context).top + 2,
+            left: 16,
+            right: 16,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Stack(
                 children: [
-                  Image.asset(
-                    'assets/images/IMG_20260702_2241000.jpg',
+                  const Image(
+                    image: AssetImage('assets/images/IMG_20260701_230739.png'),
+                    width: 100,
                   ),
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: kToolbarHeight - 4,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '总余额',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Icon(
-                                          Icons.remove_red_eye_outlined,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'RM 4,946.24',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Icon(
-                                          Icons.verified_user_sharp,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(
-                                    top: 4,
-                                    left: 8,
-                                    bottom: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: const Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        '充值',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      Icon(
-                                        Icons.chevron_right_outlined,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                  Positioned.fill(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        CountryFlag.fromCountryCode(
+                          'MY',
+                          theme: const ImageTheme(width: 16, height: 12),
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        const Text(
+                          'MY',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withValues(alpha: 0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: const Offset(
-                                    0,
-                                    3,
-                                  ), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                MainButton(
-                                  image: 'gofinance',
-                                  title: 'GOfinance',
-                                  color: 0xffFEF9E6,
-                                ),
-                                MainButton(
-                                    image: 'food',
-                                    title: 'Food & Delivery',
-                                    color: 0xffFEF7E7),
-                                MainButton(
-                                  image: 'bill',
-                                  title: '账单',
-                                  color: 0xffF7F1FD,
-                                ),
-                                MainButton(
-                                  image: 'transport',
-                                  title: '交通',
-                                  color: 0xffEAF7FF,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 28,
-                          ),
-                          IntrinsicHeight(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffEBF1FD),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/rm_flower.png',
-                                              height: 32,
-                                              width: 32,
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            const Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '增长财富',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 4,
-                                                ),
-                                                Text(
-                                                  '只需RM10起',
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffEBF1FD),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/gorewards.png',
-                                              height: 32,
-                                              width: 32,
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  'GOrewards',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 4,
-                                                ),
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 2),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      4,
-                                                    ),
-                                                  ),
-                                                  child: const Text(
-                                                    '2,644分',
-                                                    style: TextStyle(
-                                                      color: Color(0xff2D62EC),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xffEBF1FD),
-                                      borderRadius: BorderRadius.circular(
-                                        8,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/budi.png',
-                                              height: 32,
-                                              width: 32,
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            const Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'BUDI MADANI',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'RON95价格为RM1.99',
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 12,
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                8,
-                                              ),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                const Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        '剩余的汽油津贴',
-                                                        style: TextStyle(
-                                                          color:
-                                                              Color(0xff787878),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 12,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Text(
-                                                        '168 litres',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                CircularPercentIndicator(
-                                                  radius: 24.0,
-                                                  lineWidth: 6.0,
-                                                  backgroundWidth: 3.0,
-                                                  percent: 0.80,
-                                                  center: const Icon(
-                                                    Icons.local_gas_station,
-                                                    color: Color(0xff2962F7),
-                                                    size: 20,
-                                                  ),
-                                                  progressColor:
-                                                      const Color(0xff2962F7),
-                                                  circularStrokeCap:
-                                                      CircularStrokeCap.round,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '推荐服务',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 4,
-                            children: recommendServices
-                                .map((e) => RecommendedServiceButton(
-                                      image: e.image,
-                                      title: e.title,
-                                    ))
-                                .toList(),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          const Row(
-                            children: [
-                              Text(
-                                '我的服务',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                '编辑',
-                                style: TextStyle(
-                                  color: Color(0xff2B63EC),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 4,
-                            children: shortcutButtons
-                                .map((e) => RecommendedServiceButton(
-                                      image: e.image,
-                                      title: e.title,
-                                    ))
-                                .toList(),
-                          ),
-                          const Row(
-                            children: [
-                              Text('GOfinance'),
-                              Text('前往'),
-                            ],
-                          ),
-                          const Text('轻松增长并守护您的财富'),
-                          for (int i = 0; i < 10; i++) Text('Item $i'),
-                        ],
-                      ),
+                        ),
+                        const Icon(
+                          Icons.keyboard_arrow_down_sharp,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-          SafeArea(
-            child: Container(
-              padding: const EdgeInsets.only(
-                top: 4,
-                bottom: 8,
+              const SizedBox(
+                width: 8,
               ),
-              height: kToolbarHeight - 16,
-              color: const Color(0xff015ABE).withValues(alpha: _appBarOpacity),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+              // full width search bar
+              Expanded(
+                child: Container(
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(100),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                  ),
+                  child: const Row(
                     children: [
-                      Stack(
-                        children: [
-                          const Image(
-                            image: AssetImage(
-                                'assets/images/IMG_20260701_230739.png'),
-                            width: 100,
-                          ),
-                          Positioned.fill(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                CountryFlag.fromCountryCode(
-                                  'MY',
-                                  theme:
-                                      const ImageTheme(width: 16, height: 12),
-                                ),
-                                const SizedBox(
-                                  width: 4,
-                                ),
-                                const Text(
-                                  'MY',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.keyboard_arrow_down_sharp,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                        size: 16,
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      // full width search bar
-                      Expanded(
-                        child: Container(
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                                size: 16,
-                              ),
-                              Text(
-                                '探索',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  color: Color(0xff2963F5),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                '增长财富',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff787878),
-                                  fontSize: 12,
-                                ),
-                              )
-                            ],
-                          ),
+                      Text(
+                        '探索',
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Color(0xff2963F5),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
                         ),
                       ),
-                      // ... 个人头像 GestureDetector
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        '增长财富',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff787878),
+                          fontSize: 12,
+                        ),
+                      )
                     ],
+                  ),
+                ),
+              ),
+              // ... 个人头像 GestureDetector
+            ],
+          ),
+        ),
+      ),
+
+      // floatingActionButton: Container(
+      //   width: 68,
+      //   height: 68,
+      //   // 使用 Transform.translate 可以自由向上微调按钮的位置，使其完美压在底部栏上方
+      //   transform: Matrix4.translationValues(0.0, 10.0, 0.0),
+      //   decoration: const BoxDecoration(
+      //     shape: BoxShape.circle,
+      //     gradient: LinearGradient(
+      //       begin: Alignment.topCenter,
+      //       end: Alignment.bottomCenter,
+      //       colors: [Color(0xFF00E5FF), Color(0xFFB388FF)],
+      //     ),
+      //     boxShadow: [
+      //       BoxShadow(
+      //         color: Colors.black12,
+      //         blurRadius: 8,
+      //         offset: Offset(0, 4),
+      //       )
+      //     ],
+      //   ),
+      //   child: FloatingActionButton(
+      //     elevation: 0,
+      //     backgroundColor: Colors.transparent,
+      //     shape: const CircleBorder(),
+      //     onPressed: () {},
+      //     child:
+      //         const Icon(Icons.qr_code_scanner, color: Colors.white, size: 32),
+      //   ),
+      // ),
+
+      // // 2. 依然居中放置
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      // 3. 完美的平直底部栏
+      bottomNavigationBar: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.topCenter,
+        children: [
+          // 1. 调整底部的平直导航栏高度
+          Container(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewPadding.bottom,
+              left: 16,
+              right: 16,
+            ),
+            height: 72, // ✨ 从 70 调低到 56（56dp 是原生 Material 导航栏的经典高度）
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(context, 0, 'home-smile.svg', '首页'),
+                _buildNavItem(context, 1, 'share.svg', '转账'),
+                const SizedBox(width: 54), // 配合高度，间距也可以稍微缩小一点点
+                _buildNavItem(context, 2, 'activity.svg', '活动'),
+                _buildNavItem(context, 3, 'user.svg', '我的'),
+              ],
+            ),
+          ),
+
+          // 2. 中间的大按钮随之微调
+          Positioned(
+            top: -8, // ✨ 因为总高度变矮了，top 从 -12 改为 -8，让它继续保持低调、不突兀
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ScanPage(),
+                  ),
+                );
+              },
+              child: Container(
+                width: 50, // ✨ 稍微缩小一点按钮尺寸（从 66 缩小到 58），跟矮导航栏更配
+                height: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF00E5FF), Color(0xFFB388FF)],
+                  ),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 4,
+                  ),
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/scan.svg',
+                  height: 10,
+                  width: 10,
+                  fit: BoxFit.scaleDown,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
                   ),
                 ),
               ),
             ),
           ),
         ],
+      ),
+
+      // bottomNavigationBar: Container(
+      //   padding: EdgeInsets.only(
+      //     bottom: MediaQuery.of(context).padding.bottom,
+      //   ),
+      //   decoration: const BoxDecoration(
+      //     color: Colors.white,
+      //   ),
+      //   child: Row(
+      //     children: [
+      //       Expanded(
+      //         child: Container(
+      //           decoration: const BoxDecoration(
+      //             border: Border(
+      //               top: BorderSide(
+      //                 color: Color(0xff2962F7),
+      //                 width: 2,
+      //               ),
+      //             ),
+      //           ),
+      //           padding: const EdgeInsets.symmetric(
+      //             vertical: 8,
+      //           ),
+      //           child: const Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               Icon(
+      //                 Icons.home_filled,
+      //                 color: Color(0xff2962F7),
+      //               ),
+      //               Text(
+      //                 '首页',
+      //                 style: TextStyle(
+      //                   color: Color(0xff2962F7),
+      //                   fontSize: 10,
+      //                   fontWeight: FontWeight.bold,
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //       Expanded(
+      //         child: Container(
+      //           padding: const EdgeInsets.symmetric(
+      //             vertical: 8,
+      //           ),
+      //           child: const Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               Icon(
+      //                 Icons.shopping_cart_outlined,
+      //                 color: Color(0xff6d6d6d),
+      //               ),
+      //               Text(
+      //                 'eShop',
+      //                 style: TextStyle(
+      //                   color: Color(0xff6d6d6d),
+      //                   fontSize: 10,
+      //                   fontWeight: FontWeight.bold,
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //       Expanded(
+      //         child: GestureDetector(
+      //           onTap: () {
+      //             Navigator.of(context).push(
+      //               MaterialPageRoute(
+      //                 builder: (context) => const ScanPage(),
+      //               ),
+      //             );
+      //           },
+      //           child: Container(
+      //             height: 48,
+      //             padding: const EdgeInsets.symmetric(
+      //               vertical: 8,
+      //             ),
+      //             decoration: const BoxDecoration(
+      //               color: Color(0xff2052CD),
+      //               shape: BoxShape.circle,
+      //             ),
+      //             child: Column(
+      //               mainAxisAlignment: MainAxisAlignment.center,
+      //               children: [
+      //                 Image.asset(
+      //                   'assets/images/scan.png',
+      //                   width: 32,
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //       Expanded(
+      //         child: Container(
+      //           padding: const EdgeInsets.symmetric(
+      //             vertical: 8,
+      //           ),
+      //           child: const Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               Icon(
+      //                 Icons.redeem_outlined,
+      //                 color: Color(0xff6d6d6d),
+      //               ),
+      //               Text(
+      //                 'GOrewards',
+      //                 style: TextStyle(
+      //                   color: Color(0xff6d6d6d),
+      //                   fontSize: 10,
+      //                   fontWeight: FontWeight.bold,
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //       Expanded(
+      //         child: Container(
+      //           padding: const EdgeInsets.symmetric(
+      //             vertical: 8,
+      //           ),
+      //           child: const Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               Icon(
+      //                 Icons.location_on_outlined,
+      //                 color: Color(0xff6d6d6d),
+      //               ),
+      //               Text(
+      //                 'Near Me',
+      //                 style: TextStyle(
+      //                   color: Color(0xff6d6d6d),
+      //                   fontSize: 10,
+      //                   fontWeight: FontWeight.bold,
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        padding: EdgeInsets.zero,
+        child: Stack(
+          children: [
+            Image.asset(
+              'assets/images/IMG_20260702_2241000.jpg',
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 95,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                '总余额',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MerchantPage(),
+                                    ),
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.remove_red_eye_outlined,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'RM 4,946.24',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Icon(
+                                Icons.verified_user_sharp,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          top: 4,
+                          left: 8,
+                          bottom: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              '充值',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Icon(
+                              Icons.chevron_right_outlined,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(
+                            0,
+                            3,
+                          ), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        MainButton(
+                          image: 'gofinance',
+                          title: 'GOfinance',
+                          color: 0xffFEF9E6,
+                        ),
+                        MainButton(
+                            image: 'food',
+                            title: 'Food & Delivery',
+                            color: 0xffFEF7E7),
+                        MainButton(
+                          image: 'bill',
+                          title: '账单',
+                          color: 0xffF7F1FD,
+                        ),
+                        MainButton(
+                          image: 'transport',
+                          title: '交通',
+                          color: 0xffEAF7FF,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 28,
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffEBF1FD),
+                                  borderRadius: BorderRadius.circular(
+                                    8,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/rm_flower.png',
+                                      height: 32,
+                                      width: 32,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    const Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '增长财富',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          '只需RM10起',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffEBF1FD),
+                                  borderRadius: BorderRadius.circular(
+                                    8,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/gorewards.png',
+                                      height: 32,
+                                      width: 32,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'GOrewards',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            '2,644分',
+                                            style: TextStyle(
+                                              color: Color(0xff2D62EC),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xffEBF1FD),
+                              borderRadius: BorderRadius.circular(
+                                8,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/budi.png',
+                                      height: 32,
+                                      width: 32,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    const Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'BUDI MADANI',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        Text(
+                                          'RON95价格为RM1.99',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(
+                                        8,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '剩余的汽油津贴',
+                                                style: TextStyle(
+                                                  color: Color(0xff787878),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 4,
+                                              ),
+                                              Text(
+                                                '168 litres',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        CircularPercentIndicator(
+                                          radius: 24.0,
+                                          lineWidth: 6.0,
+                                          backgroundWidth: 3.0,
+                                          percent: 0.80,
+                                          center: const Icon(
+                                            Icons.local_gas_station,
+                                            color: Color(0xff2962F7),
+                                            size: 20,
+                                          ),
+                                          progressColor:
+                                              const Color(0xff2962F7),
+                                          circularStrokeCap:
+                                              CircularStrokeCap.round,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '推荐服务',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  GridView.count(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 4,
+                    children: recommendServices
+                        .map((e) => RecommendedServiceButton(
+                              image: e.image,
+                              title: e.title,
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  const Row(
+                    children: [
+                      Text(
+                        '我的服务',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        '编辑',
+                        style: TextStyle(
+                          color: Color(0xff2B63EC),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  GridView.count(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 4,
+                    children: shortcutButtons
+                        .map((e) => RecommendedServiceButton(
+                              image: e.image,
+                              title: e.title,
+                            ))
+                        .toList(),
+                  ),
+                  // const Row(
+                  //   children: [
+                  //     Text('GOfinance'),
+                  //     Text('前往'),
+                  //   ],
+                  // ),
+                  // const Text('轻松增长并守护您的财富'),
+                  // for (int i = 0; i < 10; i++) Text('Item $i'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
 
       // SafeArea(
@@ -1735,4 +1823,59 @@ class RecommendedServiceButton extends StatelessWidget {
       ],
     );
   }
+}
+
+// 抽离的底部导航 Item 构建方法
+Widget _buildNavItem(BuildContext context, int index, String icon, String label,
+    {bool hasBadge = false}) {
+  return InkWell(
+    onTap: () => {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const GofinancePage(),
+        ),
+      )
+    },
+    borderRadius: BorderRadius.circular(12),
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SvgPicture.asset(
+                'assets/images/$icon',
+                colorFilter: const ColorFilter.mode(
+                  Color(0xff2E3F59),
+                  BlendMode.srcIn,
+                ),
+              ),
+              // 右上角的红点提示（“我的”图标右上角）
+              if (hasBadge)
+                const Positioned(
+                  right: -2,
+                  top: -2,
+                  child: CircleAvatar(
+                    radius: 4,
+                    backgroundColor: Color(0xff2E3F59),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: Color(0xff2E3F59),
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
