@@ -481,27 +481,85 @@ class _ScanPageState extends State<ScanPage>
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  spacing: 16,
                   children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '只需一个应用即可扫描菜单，入境卡和链接',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '只需一个应用即可扫描菜单，入境卡和链接',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '查看所有支持的国家',
-                          style: TextStyle(
-                            color: Color(0xff2963F3),
-                            fontWeight: FontWeight.w600,
+                          Text(
+                            '查看所有支持的国家',
+                            style: TextStyle(
+                              color: Color(0xff2963F3),
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    CircleFlag('cn')
+                    SizedBox(
+                      width: 86,
+                      height: 50,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            left: 50,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.white, width: 2),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(999),
+                                child: CircleFlag(
+                                  'sg',
+                                  size: 32,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 24,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.white, width: 2),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(999),
+                                child: CircleFlag(
+                                  'th',
+                                  size: 32,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 2),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(999),
+                              child: CircleFlag(
+                                'cn',
+                                size: 32,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

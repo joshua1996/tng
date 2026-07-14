@@ -1,54 +1,81 @@
+import 'package:circle_flags/circle_flags.dart';
 import 'package:flutter/material.dart';
 
-class FloatingWidget extends StatefulWidget {
-  const FloatingWidget({super.key});
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
 
   @override
-  State<FloatingWidget> createState() => _FloatingWidgetState();
+  State<MyWidget> createState() => _MyWidgetState();
 }
 
-class _FloatingWidgetState extends State<FloatingWidget>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
-
-    _animation = Tween<double>(
-      begin: -500,
-      end: 500,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.linear,
-      ),
-    );
-  }
-
+class _MyWidgetState extends State<MyWidget> {
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (_, child) {
-        return Transform.translate(
-          offset: Offset(0, _animation.value),
-          child: child,
-        );
-      },
-      child: const FlutterLogo(size: 100),
+    return Row(
+      children: [
+        Expanded(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+                'datasssss ssssss ssssssssssssss ssssssssss sssss  d def fe ssss'),
+          ],
+        )),
+        SizedBox(
+          width: 100,
+          height: 50,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: 50,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 2),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(999),
+                    child: CircleFlag(
+                      'sg',
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 24,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 2),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(999),
+                    child: CircleFlag(
+                      'th',
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: CircleFlag(
+                    'cn',
+                    size: 30,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
