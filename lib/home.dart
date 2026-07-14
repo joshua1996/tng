@@ -576,7 +576,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 50,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [Color(0xFF00E5FF), Color(0xFFB388FF)],
                   ),
                   border: Border.all(
@@ -771,7 +771,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Row(
                             children: [
-                              Text(
+                              const Text(
                                 '总余额',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -779,7 +779,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize: 12,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 8,
                               ),
                               GestureDetector(
@@ -791,7 +791,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.remove_red_eye_outlined,
                                   color: Colors.white,
                                   size: 20,
@@ -799,10 +799,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
-                          Row(
+                          const Row(
                             children: [
                               Text(
                                 'RM 4,946.24',
@@ -1868,7 +1868,7 @@ Widget _buildNavItem(BuildContext context, int index, String icon, String label,
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xff2E3F59),
               fontSize: 10,
               fontWeight: FontWeight.bold,

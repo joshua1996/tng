@@ -1,3 +1,4 @@
+import 'package:circle_flags/circle_flags.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -15,26 +16,40 @@ class ScanPage extends StatefulWidget {
   State<ScanPage> createState() => _ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
-  late TabController tabController;
-  int _tabIndex = 0;
+class _ScanPageState extends State<ScanPage>
+    with SingleTickerProviderStateMixin {
   final MobileScannerController controller = MobileScannerController(
     formats: const [BarcodeFormat.qrCode],
   );
   String scannedCode = '';
 
+  late final AnimationController _scanAnimationController;
+  late final Animation<double> _scanAnimation;
+
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this)
-      ..addListener(() {
-        setState(() => _tabIndex = tabController.index);
-      });
+
+    _scanAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _scanAnimation = Tween<double>(
+      begin: -220,
+      end: 70,
+    ).animate(
+      CurvedAnimation(
+        parent: _scanAnimationController,
+        curve: Curves.linear,
+      ),
+    );
   }
 
   @override
   Future<void> dispose() async {
     super.dispose();
+    _scanAnimationController.dispose();
     await controller.dispose();
   }
 
@@ -86,56 +101,87 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // MobileScanner(
-            //   controller: controller,
-            //   scanWindow: scanWindow,
-            //   errorBuilder: (context, error, child) {
-            //     return ScannerErrorWidget(error: error);
-            //   },
-            //   onDetect: (barcodes) async {
-            //     if (scannedCode.isEmpty) {
-            //       scannedCode =
-            //           barcodes.barcodes.firstOrNull?.displayValue ?? '';
-            //       ShowDialog.loadingDialog(context);
-            //       final merchants = await getMerchants();
-            //       await controller.stop();
-            //       if (!context.mounted) return;
-            //       Navigator.pop(context);
-            //       if (merchants[0]['type'] == 'sme') {
-            //         await Navigator.of(context).push(
-            //           MaterialPageRoute(
-            //             builder: (context) => PaymentPage(
-            //               merchant: merchants.isEmpty ? {} : merchants[0],
-            //             ),
-            //           ),
-            //         );
-            //       } else {
-            //         await Navigator.of(context).push(
-            //           MaterialPageRoute(
-            //             builder: (context) => TransferPage(
-            //               merchant: merchants.isEmpty ? {} : merchants[0],
-            //             ),
-            //           ),
-            //         );
-            //       }
-            //       scannedCode = '';
-            //       await controller.start();
+            MobileScanner(
+              controller: controller,
+              scanWindow: scanWindow,
+              errorBuilder: (context, error, child) {
+                return ScannerErrorWidget(error: error);
+              },
+              onDetect: (barcodes) async {
+                if (scannedCode.isEmpty) {
+                  scannedCode =
+                      barcodes.barcodes.firstOrNull?.displayValue ?? '';
+                  ShowDialog.loadingDialog(context);
+                  final merchants = await getMerchants();
+                  await controller.stop();
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
+                  if (merchants[0]['type'] == 'sme') {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PaymentPage(
+                          merchant: merchants.isEmpty ? {} : merchants[0],
+                        ),
+                      ),
+                    );
+                  } else {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TransferPage(
+                          merchant: merchants.isEmpty ? {} : merchants[0],
+                        ),
+                      ),
+                    );
+                  }
+                  scannedCode = '';
+                  await controller.start();
+                }
+              },
+            ),
+
+            // ValueListenableBuilder(
+            //   valueListenable: controller,
+            //   builder: (context, value, child) {
+            //     if (!value.isInitialized ||
+            //         !value.isRunning ||
+            //         value.error != null) {
+            //       return const SizedBox();
             //     }
+
+            //     return CustomPaint(
+            //       painter: ScannerOverlay(scanWindow: scanWindow),
+            //     );
             //   },
             // ),
-            ValueListenableBuilder(
-              valueListenable: controller,
-              builder: (context, value, child) {
-                if (!value.isInitialized ||
-                    !value.isRunning ||
-                    value.error != null) {
-                  return const SizedBox();
-                }
-
-                return CustomPaint(
-                  painter: ScannerOverlay(scanWindow: scanWindow),
-                );
-              },
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: AnimatedBuilder(
+                  animation: _scanAnimation,
+                  builder: (_, child) {
+                    return Transform.translate(
+                      offset: Offset(0, _scanAnimation.value),
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 50,
+                    height: 2,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 98, 244, 247),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 98, 244, 247)
+                              .withValues(alpha: 0.9),
+                          blurRadius: 40,
+                          spreadRadius: 10,
+                          offset: const Offset(0, -20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
             Positioned(
               top: MediaQuery.of(context).size.height * 0.1,
@@ -148,13 +194,16 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
               ),
             ),
             Positioned(
-              top: MediaQuery.of(context).size.height * 0.5,
+              top: MediaQuery.of(context).size.height * 0.55,
               left: MediaQuery.of(context).size.width / 2 - 66,
               child: Row(
                 children: [
                   FilledButton(
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.grey,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                      ),
                     ),
                     onPressed: () {},
                     child: const Row(
@@ -234,9 +283,7 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: _tabIndex == 0
-                              ? Colors.white
-                              : Colors.transparent,
+                          color: 0 == 0 ? Colors.white : Colors.transparent,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(100),
                           ),
@@ -245,7 +292,7 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
                           child: Text(
                             '扫码',
                             style: TextStyle(
-                              color: _tabIndex == 0
+                              color: 0 == 0
                                   ? const Color(0xff2253CC)
                                   : Colors.white,
                             ),
@@ -256,9 +303,7 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: _tabIndex == 1
-                              ? Colors.white
-                              : Colors.transparent,
+                          color: 0 == 1 ? Colors.white : Colors.transparent,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(100),
                           ),
@@ -267,7 +312,7 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
                           child: Text(
                             '付款',
                             style: TextStyle(
-                              color: _tabIndex == 1 ? Colors.red : Colors.white,
+                              color: 0 == 1 ? Colors.red : Colors.white,
                             ),
                           ),
                         ),
@@ -276,9 +321,7 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: _tabIndex == 2
-                              ? Colors.white
-                              : Colors.transparent,
+                          color: 0 == 2 ? Colors.white : Colors.transparent,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(100),
                           ),
@@ -287,7 +330,7 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
                           child: Text(
                             '收款',
                             style: TextStyle(
-                              color: _tabIndex == 2 ? Colors.red : Colors.white,
+                              color: 0 == 2 ? Colors.red : Colors.white,
                             ),
                           ),
                         ),
@@ -424,9 +467,17 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
               right: 0,
               left: 0,
               child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 16,
+                ),
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
-                  color: Color(0xff2963F3),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -437,17 +488,20 @@ class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
                         Text(
                           '只需一个应用即可扫描菜单，入境卡和链接',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text('查看所有支持的国家'),
+                        Text(
+                          '查看所有支持的国家',
+                          style: TextStyle(
+                            color: Color(0xff2963F3),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ],
                     ),
-                    CountryFlag.fromCountryCode(
-                      'CN',
-                      theme: const ImageTheme(width: 16, height: 12),
-                    ),
+                    CircleFlag('cn')
                   ],
                 ),
               ),

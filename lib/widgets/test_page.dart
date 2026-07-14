@@ -1,58 +1,54 @@
 import 'package:flutter/material.dart';
 
-class TestPage extends StatelessWidget {
-  const TestPage({super.key});
+class FloatingWidget extends StatefulWidget {
+  const FloatingWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-              ),
-              child: Text('data')),
-          Positioned(
-            top: 50,
-            left: 50,
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.blue,
-            ),
-          ),
-        ],
+  State<FloatingWidget> createState() => _FloatingWidgetState();
+}
+
+class _FloatingWidgetState extends State<FloatingWidget>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _animation = Tween<double>(
+      begin: -500,
+      end: 500,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.linear,
       ),
     );
   }
-}
-
-Route<void> _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const Page2(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(position: animation.drive(tween), child: child);
-    },
-  );
-}
-
-class Page2 extends StatelessWidget {
-  const Page2({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: const Center(child: Text('Page 2')),
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (_, child) {
+        return Transform.translate(
+          offset: Offset(0, _animation.value),
+          child: child,
+        );
+      },
+      child: const FlutterLogo(size: 100),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
